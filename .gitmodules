@@ -1,0 +1,4 @@
+[submodule "SlopperEngine"]
+	path = SlopperEngine
+	url = https://github.com/capslock1/SlopperEngine
+	branch = Better-TestProgram
