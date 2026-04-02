@@ -1,0 +1,2925 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SlopperEngine</name>
+    </assembly>
+    <members>
+        <member name="T:SlopperEngine.Core.Asset">
+            <summary>
+            Helper class to find assets. Assumes asset folders do not change during the program's runtime.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Asset.FullFilePath">
+            <summary>
+            The filepath this asset came from. Useful for caching files.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Asset.RelativeFilePath">
+            <summary>
+            The filepath this asset came from, relative to the SlopMod of origin.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Asset.ModOfOrigin">
+            <summary>
+            The SlopMod this asset came from. 
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Core.Asset.CanRead">
+            <summary>
+            Whether or not this Asset can read the file it points to.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Core.Asset.CanWrite">
+            <summary>
+            Whether or not this Asset can write the file it points to.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Core.Asset.AssetExists">
+            <summary>
+            Whether or not this Asset has non-null fields.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Asset.GetStream">
+            <summary>
+            Gets the stream associated with the asset.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Asset.ReadAllLines(System.Text.Encoding)">
+            <summary>
+            Reads all lines of text in the file.
+            </summary>
+            <param name="encoding">The encoding to read the file with. UTF8 on default.</param>
+            <returns>A string array containing the lines of the text.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Asset.ReadAllBytes">
+            <summary>
+            Reads all bytes in the file.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Asset.ReadAllText(System.Text.Encoding)">
+            <summary>
+            Reads all text in the file into a string.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Asset.GetFile(System.String,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)">
+            <summary>
+            Gets an asset at a certain pat. Returns default if the file did not load successfully.
+            </summary>
+            <param name="path">The path to get the file from. This is relative to the SlopperMod's asset folder.</param>
+            <param name="mode">The mode to open the file with. Opens on default.</param>
+            <param name="access">The mode to access the file with.</param>
+            <param name="share">The mode to share the file with.</param>
+        </member>
+        <member name="M:SlopperEngine.Core.Asset.TryGetFile(System.String,System.Nullable{SlopperEngine.Core.Asset}@,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)">
+            <summary>
+            Tries to get a file at a certain path, relative to each SlopperMod.
+            </summary>
+            <param name="path">The path to get the file from. This is relative to the SlopperMod's asset folder.</param>
+            <param name="file">The retrieved file. Null if this function returns false - this means the file could not be found.</param>
+            <param name="mode">The mode to open the file with. Opens on default.</param>
+            <param name="access">The mode to access the file with.</param>
+            <param name="share">The mode to share the file with.</param>
+            <returns>Whether or not the file could be found.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Asset.TryGetFileFromMod(System.String,SlopperEngine.Core.Mods.SlopModInfo,System.Nullable{SlopperEngine.Core.Asset}@,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)">
+            <summary>
+            Tries to get a file at a certain path, relative to a given SlopperMod.
+            </summary>
+            <param name="path">The path to get the file from.</param>
+            <param name="mod">The mod to load the file from.</param>
+            <param name="file">The retrieved file. Null if this function returns false - this means the file could not be found.</param>
+            <param name="mode">The mode to open the file with. Opens on default.</param>
+            <param name="access">The mode to access the file with.</param>
+            <param name="share">The mode to share the file with.</param>
+            <returns>Whether or not the file could be found.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Asset.GetEngineAsset(System.String)">
+            <summary>
+            Gets an engine asset at a certain path (read only). Returns default if the file did not load successfully.
+            </summary>
+            <param name="path">The path to get the file from. This is relative to the "EngineAssets" folder.</param>
+        </member>
+        <member name="M:SlopperEngine.Core.Asset.TryGetEngineAsset(System.String,System.Nullable{SlopperEngine.Core.Asset}@)">
+            <summary>
+            Tries to get an engine asset at a certain path (read only).
+            </summary>
+            <param name="path">The path to get the file from. This is relative to the "EngineAssets" folder.</param>
+            <param name="file">The retrieved file. Null if this function returns false - this means the file could not be found.</param>
+            <returns>Whether or not the file could be found.</returns>
+        </member>
+        <member name="T:SlopperEngine.Core.Collections.BitList">
+            <summary>
+            Low memory cost list of bools. Does not support functions that don't make sense, mostly index-based or finding T based functions.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Collections.BitList.GetIndexOfFirst(System.Boolean,System.Int32)">
+            <summary>
+            Gets the index of the first occurrence of a certain value.
+            </summary>
+            <param name="value">The value to seek.</param>
+            <param name="startIndex">The index to start the search from.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SlopperEngine.Core.Collections.Cache`2">
+            <summary>
+            Can cache arbitrary info that gets GC'd when unused.
+            </summary>
+            <typeparam name="TKey">The type of key for the cache. Usually the filepath, as a string.</typeparam>
+            <typeparam name="TValue">The type of value to cache.</typeparam>
+        </member>
+        <member name="M:SlopperEngine.Core.Collections.Cache`2.Get(`0)">
+            <summary>
+            Gets a value from the cache. Returns null if it hasn't been cached, or if it's been too long since last access.
+            </summary>
+            <param name="key">The key the value was stored at.</param>
+            <returns>The value to get.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Collections.Cache`2.Set(`0,`1)">
+            <summary>
+            Sets a value in the cache.
+            </summary>
+            <param name="key">The key to set the value at.</param>
+            <param name="value">The value to set.</param>
+        </member>
+        <member name="T:SlopperEngine.Core.Collections.FridgeDictionary`2">
+            <summary>
+            A high-speed dictionary, intended to sporadically have content added.
+            </summary>
+            <typeparam name="TKey"></typeparam>
+            <typeparam name="TValue"></typeparam>
+        </member>
+        <member name="T:SlopperEngine.Core.Collections.IRefEnumerable`1">
+            <summary>
+            A collection that can be enumerated by reference.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Collections.IRefEnumerable`1.Enumerate``1(``0@)">
+            <summary>
+            When implemented, calls Next() on the given enumerator.
+            </summary>
+            <param name="enumerator">The enumerator to use.</param>
+        </member>
+        <member name="T:SlopperEngine.Core.Collections.IRefEnumerator`1">
+            <summary>
+            Enumerates over an IRefEnumerable.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Collections.IRefEnumerator`1.Next(`0@)">
+            <summary>
+            When implemented, may be called by IRefEnumerable for every T in the collection.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.Collections.SpanList`1">
+            <summary>
+            A list for writing spans into directly.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Core.Collections.SpanList`1.AllValues">
+            <summary>
+            All available values in the SpanList. Should directly be written to, as it is volatile.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Collections.SpanList`1.Add(`0)">
+            <summary>
+            Adds a single item to the list.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Collections.SpanList`1.AddMultiple(System.Int32)">
+            <summary>
+            Reserves a span of T and adds it to the list.
+            </summary>
+            <param name="lengthToAdd">The amount of elements to add.</param>
+            <returns>A span for the caller to write into.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Collections.SpanList`1.EnsureCapacity(System.Int32)">
+            <summary>
+            Ensures that a given capacity is available in the SpanList.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Collections.SpanList`1.Clear">
+            <summary>
+            Clears the list's values. Garbage data can remain, if AddMultiple is used and T is unmanaged.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Collections.SpanList`1.ListSpan.Slice(System.Int32)">
+            <summary>
+            Forms a slice out of the current range that begins at a specified index.
+            </summary>
+            <param name="start">The index at which to begin the slice.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SlopperEngine.Core.EngineMethodAttribute">
+            <summary>
+            Abstract attribute for methods. Will ensure a method is registered to a scene, if there is an appropriate MethodHandler.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.EngineMethodAttribute.CreateUsableFromMethodInfo(System.Reflection.MethodInfo)">
+            <summary>
+            Creates a usable EngineMethodAttribute that can register objects to the scene.
+            </summary>
+            <param name="info"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SlopperEngine.Core.EngineMethodAttribute.RegisterToScene(SlopperEngine.SceneObjects.Scene,SlopperEngine.SceneObjects.SceneObject)">
+            <summary>
+            Registers this EngineMethod to the scene. Only valid when created using CreateUsableFromMethodInfo().
+            </summary>
+            <param name="scene">The scene to register to.</param>
+            <param name="obj">The SceneObject to register it to.</param>
+        </member>
+        <member name="M:SlopperEngine.Core.EngineMethodAttribute.UnregisterFromScene(SlopperEngine.SceneObjects.Scene,SlopperEngine.Core.SceneData.SceneDataHandle,SlopperEngine.SceneObjects.SceneObject)">
+            <summary>
+            Unregisters this EngineMethod from the scene. Only valid when created using CreateUsableFromMethodInfo().
+            </summary>
+            <param name="scene">The scene to unregister from.</param>
+            <param name="handle">The handle of the registered method.</param>
+            <param name="obj">The SceneObject to unregister.</param>
+        </member>
+        <member name="T:SlopperEngine.Core.OnFrameUpdateAttribute">
+            <summary>
+            Makes a method get called every frame, before the scene gets rendered.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.OnFrameUpdate">
+            <summary>
+            Stores the necessary information to call OnUnregister on a SceneObject.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.OnInputUpdateAttribute">
+            <summary>
+            Makes a method get called every frame, before the scene gets rendered.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.OnInputUpdate">
+            <summary>
+            Stores the necessary information to call OnUnregister on a SceneObject.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.OnInputUpdate.#ctor(,SlopperEngine.SceneObjects.SceneObject)">
+            <summary>
+            Stores the necessary information to call OnUnregister on a SceneObject.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.OnPhysicsUpdateAttribute">
+            <summary>
+            Makes a method get called every frame, before the scene gets rendered.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.OnPhysicsUpdate">
+            <summary>
+            Stores the necessary information to call OnUnregister on a SceneObject.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.OnRegisterAttribute">
+            <summary>
+            Makes a method get called when the SceneObject gets added and registered to the scene, at the end of the update loop.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.OnRegister">
+            <summary>
+            Stores the necessary information to call OnRegister on a SceneObject.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.OnUnregisterAttribute">
+            <summary>
+            Makes a method get called when the SceneObject gets removed and unregistered to the scene, at the end of the update loop.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.OnUnregister">
+            <summary>
+            Stores the necessary information to call OnUnregister on a SceneObject.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.FrameUpdateArgs">
+            <summary>
+            Arguments for a scene update.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.FrameUpdateArgs.DeltaTime">
+            <summary>
+            The time that has passed since the last update.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.InputUpdateArgs">
+            <summary>
+            Describes an input for OnInputUpdate.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.InputUpdateArgs.KeyboardState">
+            <summary>
+            The state of the keyboard when the input update was made.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.InputUpdateArgs.MouseState">
+            <summary>
+            The state of the mouse when the input update was made.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Core.InputUpdateArgs.TextInputEvents">
+            <summary>
+            The text input events that were received.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.InputUpdateArgs.NormalizedMousePosition">
+            <summary>
+            The mouse position in normalized coordinates relative to the size of the screen where the InputUpdate originated from. Y up, range 0-1.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.Mods.ISlopModEvents">
+            <summary>
+            Events for when the SlopMod loads.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Mods.ISlopModEvents.OnModLoad">
+            <summary>
+            Gets called after all assemblies in the SlopMod get loaded.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.Mods.ModPermissionFlags">
+            <summary>
+            Rules for what a SlopperMod's code is allowed to do.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.ModPermissionFlags.None">
+            <summary>
+            The mod can't do anything. No code will be loaded.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.ModPermissionFlags.Default">
+            <summary>
+            The mod is allowed to read and write its own files, modify existing scenes, and add its own code.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.ModPermissionFlags.ManageScenes">
+            <summary>
+            The mod is allowed to create, activate, and deactivate scenes.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.ModPermissionFlags.ManageOtherModFiles">
+            <summary>
+            The mod is allowed to read and write files of other SlopperMods (if they have less or equal permissions).
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.ModPermissionFlags.AccessNetwork">
+            <summary>
+            The mod is allowed to access the internet.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.ModPermissionFlags.AccessOtherMods">
+            <summary>
+            The mod is allowed to access code from mods (with less or equal permissions).
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.ModPermissionFlags.ManageMods">
+            <summary>
+            The mod is allowed to load and unload mods (with less or equal permissions).
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.ModPermissionFlags.Unrestricted">
+            <summary>
+            The mod has complete and unrestricted access to any code and the engine.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.ModPermissionFlags.All">
+            <summary>
+            All flags set to true.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.Mods.ModPermissionHelper">
+            <summary>
+            Helper functions to aid with ModPermissionFlags.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Mods.ModPermissionHelper.HasPermissions(SlopperEngine.Core.Mods.ModPermissionFlags,SlopperEngine.Core.Mods.ModPermissionFlags)">
+            <summary>
+            Tests whether or not a mod has higher permissions than another mod.
+            </summary>
+            <param name="modPermissions">The mod to test permissions of.</param>
+            <param name="permissionToTest">The permissions to test for.</param>
+            <returns>Whether or not a mod has permissions to do something.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Mods.ModPermissionHelper.GetPolicy(SlopperEngine.Core.Mods.ModPermissionFlags)">
+            <summary>
+            Gets the associated CasPolicy for a given ModPermissionFlags.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.Mods.RequiresPermissionAttribute">
+            <summary>
+            Used to mark when a member needs a special permission to be used by mods.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.RequiresPermissionAttribute.RequiredPermissions">
+            <summary>
+            The permission that is required to accesss the member.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Mods.RequiresPermissionAttribute.#ctor(SlopperEngine.Core.Mods.ModPermissionFlags)">
+            <param name="requiredPermissions">The permission that is required to accesss the member.</param>
+        </member>
+        <member name="T:SlopperEngine.Core.Mods.SlopModInfo">
+            <summary>
+            Contains important information about a slopmod.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Core.Mods.SlopModInfo.EngineInfo">
+            <summary>
+            The SlopModInfo belonging to the engine.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.SlopModInfo.FullFilePath">
+            <summary>
+            The full file path to this SlopMod.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.SlopModInfo.AssetFolderPath">
+            <summary>
+            The full file path to this SlopMod's asset folder.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.SlopModInfo.ShortName">
+            <summary>
+            The name of this SlopMod
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.SlopModInfo.Permissions">
+            <summary>
+            The permissions this SlopMod has.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Core.Mods.SlopModInfo.IsSlopperEngine">
+            <summary>
+            Whether or not this SlopModInfo belongs to SlopperEngine.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Core.Mods.SlopModInfo.Policy">
+            <summary>
+            The policy this SlopMod is subject to. Null if this SlopMod is fully trusted, or completely untrusted.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Core.Mods.SlopModInfo.AssembliesInMod">
+            <summary>
+            Gets the assemblies in this SlopMod.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Mods.SlopModInfo.TryGetOrLoadMod(System.String,SlopperEngine.Core.Mods.ModPermissionFlags,SlopperEngine.Core.Mods.SlopModInfo@)">
+            <summary>
+            Loads a mod at a certain filepath (or just gets the mod that was already loaded).
+            </summary>
+            <param name="filePath">The filepath to load the mod at.</param>
+            <param name="permissions">The permissions of the mod.</param>
+            <param name="result">The ModInfo instance. Null if the function returns false.</param>
+            <returns>Whether or not the mod could be loaded. False likely means the caller lacks permissions.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Mods.SlopModInfo.TryGetInfo(System.Reflection.Assembly,SlopperEngine.Core.Mods.SlopModInfo@)">
+            <summary>
+            Tries to get the SlopModInfo associated with an assembly.
+            </summary>
+            <param name="assembly">The assembly to get the SlopModInfo of.</param>
+            <param name="result">The SlopMod from which the assembly originated. Null if this function returns false.</param>
+            <returns>Whether or not the assembly comes from a SlopMod in the first place.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Mods.SlopModInfo.TryGetModByName(System.String,SlopperEngine.Core.Mods.SlopModInfo@)">
+            <summary>
+            Gets a SlopMod by its name (if it exists).
+            </summary>
+            <param name="shortName">The short name of the SlopMod.</param>
+            <param name="result">The SlopMod with the given name. Null if the function returns false.</param>
+            <returns>Whether or not the mod is loaded, or if it ever existed in the first place.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Mods.SlopModInfo.InitializeMods">
+            <summary>
+            Finds all trusted mods and loads them.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Mods.SlopModInfo.GetAllMods">
+            <summary>
+            Gets all mods loaded in the program.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.SceneComponents.PhysicsHandler">
+            <summary>
+            Calls every methodHolder that's been added to it, with no respect for order.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.SceneComponents.PhysicsHandler.FrameUpdate(SlopperEngine.Core.FrameUpdateArgs)">
+            <summary>
+            Updates all objects in the scene with this particular EngineMethodHolder.
+            </summary>
+            <param name="input">The input parameter to the EngineMethod.</param>
+        </member>
+        <member name="T:SlopperEngine.Core.SceneComponents.RegisterHandler">
+            <summary>
+            Handles registration in Scenes.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.SceneComponents.SceneComponent">
+            <summary>
+            Part of the scene, decides how objects within it should behave - analogous to the singleton pattern.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.SceneComponents.SceneComponent.FrameUpdate(SlopperEngine.Core.FrameUpdateArgs)">
+            <summary>
+            Updates the component.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.SceneComponents.SceneComponent.InputUpdate(SlopperEngine.Core.InputUpdateArgs)">
+            <summary>
+            Updates the component's user input.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.SceneComponents.UpdateHandler">
+            <summary>
+            Calls every methodHolder that's been added to it, with no respect for order.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Core.SceneComponents.UpdateHandler.TimeMilliseconds">
+            <summary>
+            The time that has passed since the instantiation of this UpdateHandler.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.SceneComponents.UpdateHandler.FrameUpdate(SlopperEngine.Core.FrameUpdateArgs)">
+            <summary>
+            Updates all objects in the scene with OnFrameUpdate.
+            </summary>
+            <param name="input">The input parameter to the EngineMethod.</param>
+        </member>
+        <member name="T:SlopperEngine.Core.SceneData.SceneDataContainer`1">
+            <summary>
+            Abstract container for mass amounts of scene data, like drawcalls or registered methods. 
+            </summary>
+            <typeparam name="T">The data type to store. Optimally a struct.</typeparam>
+        </member>
+        <member name="M:SlopperEngine.Core.SceneData.SceneDataContainer`1.QueueAdd(`0)">
+            <summary>
+            Adds data to the container. Is only used once FinalizeQueue is called.
+            </summary>
+            <param name="data">The data to set.</param>
+        </member>
+        <member name="M:SlopperEngine.Core.SceneData.SceneDataContainer`1.QueueRemove(SlopperEngine.Core.SceneData.SceneDataHandle,`0)">
+            <summary>
+            Removes data from the container. Is only removed once FinalizeQueue is called.
+            </summary>
+            <param name="handle">The data's handle.</param>
+            <param name="data">The data that should be removed. Should only be taken into account in situations where the container cannot find it.</param>
+        </member>
+        <member name="T:SlopperEngine.Core.SceneData.ISceneDataContainer">
+            <summary>
+            Stores the SceneDataContainer without the generic bit. Should only ever be inherited by SceneDataContainer
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.SceneData.ISceneDataContainer.FinalizeQueue">
+            <summary>
+            Finalizes the add/remove queue.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.SceneData.SceneDataHandle">
+            <summary>
+            Handle for SceneData. 
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.SceneData.SparseSemiorderedSceneDataContainer`1">
+            <summary>
+            Stores all data in a consistent order, but data may be inserted in between.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:SlopperEngine.Core.SceneObjectReflectionCache">
+            <summary>
+            Creates a central dictionary where all SceneObjects can look up and register their EngineMethods.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.SceneObjectReflectionCache.AddAssembly(System.Reflection.Assembly)">
+            <summary>
+            Adds an assembly to the EngineMethod register. If the assembly is already present, it gets ignored.
+            </summary>
+            <param name="assembly">Assembly to add.</param>
+        </member>
+        <member name="M:SlopperEngine.Core.SceneObjectReflectionCache.GetEngineMethods(System.Type)">
+            <summary>
+            Gets the engine methods associated with the type of a SceneObject.
+            </summary>
+            <param name="SceneObjectType"></param>
+        </member>
+        <member name="T:SlopperEngine.Core.Serialization.ISerializableFromKey`1">
+            <summary>
+            Offers functions to serialize and deserialize objects that are unable to be serialized by their actual value.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Serialization.ISerializableFromKey`1.Serialize">
+            <summary>
+            Serializes this object into its key.
+            </summary>
+            <returns>An object that represents this object.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Serialization.ISerializableFromKey`1.Deserialize(`0)">
+            <summary>
+            Deserializes an object from its key. The key not being null is NOT garuanteed, even when it's not marked nullable.
+            </summary>
+            <param name="key">The key to create the object from.</param>
+            <returns>A new instance created using the key.</returns>
+        </member>
+        <member name="T:SlopperEngine.Core.Serialization.ISerializableFromKeyBase">
+            <summary>
+            Non-generic ISerializableFromKey interface.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.Serialization.ReflectionCache">
+            <summary>
+            Caches reflection info used by the serialization system.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Serialization.ReflectionCache.DeserializeObjectFromKey(System.Type,System.Type,System.Object)">
+            <summary>
+            Tries to call "object Deserialize(TKey)" on a type that implements ISerializableFromKey.
+            </summary>
+            <param name="keyType">The type of the key.</param>
+            <param name="objectType">The type of the object (that implements ISerializableFromKey).</param>
+            <param name="key">The key to deserialize from.</param>
+            <returns>A new instance of an object created from the key, or null if any error occurs.</returns>
+        </member>
+        <member name="M:SlopperEngine.Core.Serialization.ReflectionCache.GetSerializableFields(System.Type)">
+            <summary>
+            Gets the allowed serializable fields for a given type.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Core.Serialization.ReflectionCache.GetOnSerializeMethods(System.Type)">
+            <summary>
+            Gets the first method of the type with a correct OnSerialize attribute.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Core.Serialization.SerializedTypeInfo">
+            <summary>
+            Represents information about a type that has gone through the serialization process.
+            </summary>
+            <param name="Type">The type being represented.</param>
+            <param name="Fields">The fields of this type. Null if it could not be found.</param>
+            <param name="OnSerializeMethods">The OnSerialize" methods of the type. Null if it could not be found.</param>
+        </member>
+        <member name="M:SlopperEngine.Core.Serialization.SerializedTypeInfo.#ctor(System.Type,System.Collections.ObjectModel.ReadOnlyCollection{System.Reflection.FieldInfo},System.Collections.ObjectModel.ReadOnlyCollection{System.Reflection.MethodInfo})">
+            <summary>
+            Represents information about a type that has gone through the serialization process.
+            </summary>
+            <param name="Type">The type being represented.</param>
+            <param name="Fields">The fields of this type. Null if it could not be found.</param>
+            <param name="OnSerializeMethods">The OnSerialize" methods of the type. Null if it could not be found.</param>
+        </member>
+        <member name="P:SlopperEngine.Core.Serialization.SerializedTypeInfo.Type">
+            <summary>The type being represented.</summary>
+        </member>
+        <member name="P:SlopperEngine.Core.Serialization.SerializedTypeInfo.Fields">
+            <summary>The fields of this type. Null if it could not be found.</summary>
+        </member>
+        <member name="P:SlopperEngine.Core.Serialization.SerializedTypeInfo.OnSerializeMethods">
+            <summary>The OnSerialize" methods of the type. Null if it could not be found.</summary>
+        </member>
+        <member name="T:SlopperEngine.EditorIntegration.EditableInInspectorAttribute">
+            <summary>
+            Indicates whether or not the field or property may be edited. If set to false, it can still be read.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.EditorIntegration.EditableInInspectorAttribute.Editable">
+            <summary>
+            Whether or not the field or property may be edited.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.EditorIntegration.EditableInInspectorAttribute.#ctor(System.Boolean)">
+            <param name="editable">Whether or not the field or property may be edited.</param>
+        </member>
+        <member name="T:SlopperEngine.EditorIntegration.HideInInspectorAttribute">
+            <summary>
+            Hides a public property or field from the editor.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.EditorIntegration.ShowInInspectorAttribute">
+            <summary>
+            Shows a private or protected property in the inspector.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.CPUResources.RGBA8Texture">
+            <summary>
+            A texture on CPU's memory, with 8 bit RGBA color.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.CPUResources.RGBA8Texture.GPUTexture">
+            <summary>
+            The texture on VRAM.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Graphics.CPUResources.RGBA8Texture.Width">
+            <summary>
+            The width in pixels.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Graphics.CPUResources.RGBA8Texture.Height">
+            <summary>
+            The height in pixels.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.CPUResources.RGBA8Texture.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new RGBA8Texture from width and height. Is initialized to transparent black.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.CPUResources.RGBA8Texture.Load(SlopperEngine.Core.Asset)">
+            <summary>
+            Loads a new RGBA8Texture from the disk.
+            </summary>
+            <param name="asset">The asset containing the texture.</param>
+            <returns>A new RGBA8Texture. This is not cached.</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.CPUResources.RGBA8Texture.UpdateGPU">
+            <summary>
+            Sets the GPUTexture to be up to date to the CPU side texture.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.CPUResources.RGBA8Texture.TrySetPixel(OpenTK.Mathematics.Vector2i,OpenTK.Mathematics.Color4)">
+            <summary>
+            Tries to set a certain pixel to a certain color.
+            </summary>
+            <param name="position">The pixel to change.</param>
+            <param name="color">The color to set the color as.</param>
+            <returns>Whether or not the pixel was in bounds (and could be written).</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.CPUResources.RGBA8Texture.TryGetPixel(OpenTK.Mathematics.Vector2i,OpenTK.Mathematics.Color4@)">
+            <summary>
+            Tries to read a pixel on the texture.
+            </summary>
+            <param name="position">The pixel to read.</param>
+            <param name="color">The color at the point.</param>
+            <returns>Whether or not the pixel was in bounds (and could be read).</returns>
+        </member>
+        <member name="T:SlopperEngine.Graphics.DefaultResources.DefaultMeshes">
+            <summary>
+            Contains several "default" meshes for easy use.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Graphics.DefaultResources.DefaultMeshes.Cube">
+            <summary>
+            I forgot what the UVs look like, but this sure is a cube.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Graphics.DefaultResources.DefaultMeshes.Plane">
+            <summary>
+            Plane of 2x2 units, centered on the origin.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Graphics.DefaultResources.DefaultMeshes.Sphere">
+            <summary>
+            Unit sphere with equirectangular UVs.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Graphics.DefaultResources.DefaultMeshes.Error">
+            <summary>
+            Error model with the messiest UVs you've seen in your life.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.DefaultResources.DefaultTextures">
+            <summary>
+            Contains several "default" textures for easy use.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.FullScreenTriangle">
+            <summary>
+            Hardcoded and messy way of rendering a triangle to the screen. Mainly useful for windowing, as it functions across windows. UVs range from 0-1 from side to side of the screen.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.FullScreenTriangle.Draw(SlopperEngine.Graphics.GPUResources.Textures.Texture2D,OpenTK.Windowing.Desktop.NativeWindow)">
+            <summary>
+            Draws a texture to the screen. Expects currentWindow to be the current context.
+            </summary>
+            <param name="texture">The texture to draw to the screen.</param>
+            <param name="currentWindow">The window being drawn to.</param>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GLInfo">
+            <summary>
+            Basic, static info about the available graphics library.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.GLInfo.Version">
+            <summary>
+            The version of OpenGL, as an int. Expected to be at least 430.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.GLInfo.VersionString">
+            <summary>
+            The version of OpenGL, as a string. Expected to be at least 430.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.BufferObject">
+            <summary>
+            A GPU-side buffer containing arbitrary data. 
+            Writeability depends on the BufferTarget, but is generally only CPU-side.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.Create``1(OpenTK.Graphics.OpenGL4.BufferTarget,System.Span{``0},OpenTK.Graphics.OpenGL4.BufferUsageHint)">
+            <summary>
+            Creates a new BufferObject initialized with a specific type of data.
+            </summary>
+            <typeparam name="T">The type of data to fill the buffer with.</typeparam>
+            <param name="type">The type of buffer object.</param>
+            <param name="data">The data to store.</param>
+            <param name="usage">Optionally, the usage hint.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.Create(OpenTK.Graphics.OpenGL4.BufferTarget,System.Int32,OpenTK.Graphics.OpenGL4.BufferUsageHint)">
+            <summary>
+            Creates a new BufferObject initialized with no data.
+            </summary>
+            <param name="type">The type of the buffer object.</param>
+            <param name="size">The size of the buffer in bytes.</param>
+            <param name="usage">Optionally, the usage hint.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.Use">
+            <summary>
+            Uses this BufferObject for CPU-Side operations.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.Bind(System.Int32)">
+            <summary>
+            Uses this BufferObject for GPU-side reading.
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.SetData``1(System.Span{``0},System.Int32)">
+            <summary>
+            Writes a span to the buffer.
+            </summary>
+            <typeparam name="T">The type of data to write.</typeparam>
+            <param name="data">The data to write.</param>
+            <param name="index">The byte offset to write at.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.SetData(System.Int32,System.Int32)">
+            <summary>
+            Writes an int to the buffer.
+            </summary>
+            <param name="data">Int to set.</param>
+            <param name="index">Byte offset to set the int at.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.SetData(System.Single,System.Int32)">
+            <summary>
+            Writes a float to the buffer.
+            </summary>
+            <param name="data">Float to set.</param>
+            <param name="index">Byte offset to set the float at.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.SetData(OpenTK.Mathematics.Vector2,System.Int32)">
+            <summary>
+            Writes a 2D vector to the buffer.
+            </summary>
+            <param name="data">Vector to set.</param>
+            <param name="index">Byte offset to set the vector at.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.SetData(OpenTK.Mathematics.Vector3,System.Int32)">
+            <summary>
+            Writes a 3D vector to the buffer.
+            </summary>
+            <param name="data">Vector to set.</param>
+            <param name="index">Byte offset to set the vector at.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.SetData(OpenTK.Mathematics.Vector4,System.Int32)">
+            <summary>
+            Writes a 4D vector to the buffer.
+            </summary>
+            <param name="data">Vector to set.</param>
+            <param name="index">Byte offset to set the vector at.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.SetData(OpenTK.Mathematics.Matrix2,System.Int32)">
+            <summary>
+            Writes a 2D matrix to the buffer.
+            </summary>
+            <param name="data">Matrix to set.</param>
+            <param name="index">Byte offset to set the matrix at.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.SetData(OpenTK.Mathematics.Matrix3,System.Int32)">
+            <summary>
+            Writes a 3D matrix to the buffer.
+            </summary>
+            <param name="data">Matrix to set.</param>
+            <param name="index">Byte offset to set the matrix at.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.BufferObject.SetData(OpenTK.Mathematics.Matrix4,System.Int32)">
+            <summary>
+            Writes a 4D matrix to the buffer.
+            </summary>
+            <param name="data">Matrix to set.</param>
+            <param name="index">Byte offset to set the matrix at.</param>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.FrameBuffer">
+            <summary>
+            A container for textures to draw to using a DrawShader.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.FrameBuffer.Use">
+            <summary>
+            Makes the buffer active, resulting in all following drawcalls writing to it.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.FrameBuffer.Unuse">
+            <summary>
+            Uses the default framebuffer (owned by the current NativeWindow).
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.GPUResource">
+            <summary>
+            Abstract class to handle resources on the GPU.
+            Automatically cleaned from VRAM if garbage collected.
+            </summary>
+        </member>
+        <member name="E:SlopperEngine.Graphics.GPUResources.GPUResource.OnDispose">
+            <summary>
+            Gets called when the GPUResource gets disposed.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Graphics.GPUResources.GPUResource.OverrideOrigin">
+            <summary>
+            Offers an override for the origin of this resource. If set, this will be used in serialization (and can prevent blank data after deserialization).
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.GPUResource.GetResourceData">
+            <summary>
+            Gotten when the class is disposed or garbage collected.
+            </summary>
+            <returns>A class containing a function to remove the GPUResource from VRAM.</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.GPUResource.ClearLostResources">
+            <summary>
+            Removes any garbage collected GPUResources from VRAM. 
+            The garbage collector works inconsistently, and should not be relied on over manual disposing.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.GPUResource.Dispose">
+            <summary>
+            Removes the GPUResource from VRAM.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.IGPUResourceOrigin">
+            <summary>
+            An interface for serializing GPUResources. Should be able to approximately reconstruct a resource.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.IGPUResourceOrigin.CreateResource">
+            <summary>
+            Recreates the original resource.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Meshes.Mesh">
+            <summary>
+            Abstract class that stores a mesh on the GPU side.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Meshes.Mesh.Draw">
+            <summary>
+            Draws a single instance of the mesh using the currently bound shader.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Meshes.Mesh.DrawInstanced(System.Int32)">
+            <summary>
+            Draws several instances of the mesh using the currently bound shader.
+            </summary>
+            <param name="count">The amount of instaces to draw.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Meshes.Mesh.GetMeshInfo">
+            <summary>
+            Gets necessary information about the mesh for in-shader use.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Meshes.Mesh.Use">
+            <summary>
+            Binds the VAO.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Meshes.Mesh.Unuse">
+            <summary>
+            Unbinds the VAO. 
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Meshes.MeshInfo">
+            <summary>
+            Describes the format of a mesh. Should be privately implemented within mesh classes. <br/>
+            Appropriate for use in dictionaries.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Meshes.MeshInfo.GLSLGetLayoutBlock">
+            <summary>
+            Describes the layout of the VAO in GLSL.
+            </summary>
+            <returns>A string containing GLSL code, describing the layout and types of the inputs of the vertex shader.</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Meshes.MeshInfo.GLSLVertexInitialize(SlopperEngine.Graphics.ShadingLanguage.SyntaxTree,System.CodeDom.Compiler.IndentedTextWriter)">
+            <summary>
+            Initializes all vertIn variables within scope, by adding the "vertIn_Initialize()" function.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Meshes.MeshInfo.Equals(SlopperEngine.Graphics.GPUResources.Meshes.MeshInfo)">
+            <summary>
+            Internal check for if two meshInfos are equal. other is garuanteed to be of the same type.
+            </summary>
+            <param name="other">Garuanteed to be of the same type as this.</param>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Meshes.OBJMesh">
+            <summary>
+            A mesh created from a wavefront .obj file.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Meshes.ScreenspaceQuadMesh">
+            <summary>
+            Represents a quad that lives in screenspace. Does not have a third dimension.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Meshes.ScreenspaceQuadMesh.SetShape(OpenTK.Mathematics.Box2)">
+            <summary>
+            Sets the shape of the ScreenspaceQuadMesh.
+            </summary>
+            <param name="shape">The shape to set in normalized device coordinates.</param>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Shaders.ComputeShader">
+            <summary>
+            A specialized type of programshader able to process arbitrary data.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Shaders.ComputeShader.Create(System.String)">
+            <summary>
+            Creates a compute shader from GLSL code.
+            </summary>
+            <param name="computeCode">The GLSL source code to create this compute shader.</param>
+            <returns>A new compute shader instance.</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Shaders.ComputeShader.Dispatch(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Activates the main() function of the compute shader on the GPU.
+            </summary>
+            <param name="groupsX">The amount of times to call "local_size_x" invocations of the shader.</param>
+            <param name="groupsY">The amount of times to call "local_size_y" invocations of the shader.</param>
+            <param name="groupsZ">The amount of times to call "local_size_z" invocations of the shader.</param>
+            <exception cref="T:System.Exception">Illegal amount of groups.</exception>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Shaders.DrawShader">
+            <summary>
+            A shader that can be used to draw a mesh into the bound framebuffer.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Shaders.DrawShader.Create(SlopperEngine.Graphics.GPUResources.Shaders.VertexShader,SlopperEngine.Graphics.GPUResources.Shaders.FragmentShader)">
+            <summary>
+            Creates a new drawshader from a vertex and fragment shader..
+            </summary>
+            <param name="vert">The vertex shader.</param>
+            <param name="frag">The fragment shader.</param>
+            <returns>A new DrawShader instance.</returns>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Shaders.FragmentShader">
+            <summary>
+            An abstract shader that describes the fragment function of a drawshader. Cannot be used outside of a DrawShader.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Shaders.FragmentShader.Create(System.String)">
+            <summary>
+            Creates a new FragmentShader instance from GLSL code.
+            </summary>
+            <param name="fragCode">The source code of the fragment shader.</param>
+            <returns>A new FragmentShader instance.</returns>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Shaders.ProgramShader">
+            <summary>
+            A shader that can execute a program on the GPU. Used by DrawShader and ComputeShader.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Shaders.ProgramShader.Use">
+            <summary>
+            Uses the shader. Does not execute any code on the GPU.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Shaders.ProgramShader.GetUniformLocation(System.String)">
+            <summary>
+            Gets the location of a uniform.
+            </summary>
+            <param name="name">The name of the shader's uniform.</param>
+            <returns>-1 if the uniform does not exist, or is unused. Else a positive integer describing a location for use in SetUniform().</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Shaders.ProgramShader.GetSettableUniforms">
+            <summary>
+            Gets a list of uniforms in the shader.
+            </summary>
+            <returns>A list of uniforms. Uniforms with location -1 are removed.</returns>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Shaders.Shader">
+            <summary>
+            Abstract class describing an unbound shader object. Cannot be used outside of a ProgramShader.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Shaders.VertexShader">
+            <summary>
+            An abstract shader that describes the fragment function of a drawshader. Cannot be used outside of a DrawShader.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Shaders.VertexShader.Create(System.String)">
+            <summary>
+            Creates a new VertexShader instance from GLSL code.
+            </summary>
+            <param name="vertCode">The source code of the vertex shader.</param>
+            <returns>A new VertexShader instance.</returns>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Textures.Texture">
+            <summary>
+            Abstract GPU-side texture class. Handles low level functions only.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.GPUResources.Textures.Texture.MagnificationFilter">
+            <summary>
+            The filter to use when the texture is magnified.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.GPUResources.Textures.Texture.MinificationFilter">
+            <summary>
+            The filter to use when the texture is not magnified.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.GPUResources.Textures.Texture.HorizontalWrap">
+            <summary>
+            How to sample the texture when the horizontal component of the UV is too large/negative.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.GPUResources.Textures.Texture.VerticalWrap">
+            <summary>
+            How to sample the texture when the vertical component of the UV is too large/negative. 
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.GPUResources.Textures.Texture.DepthWrap">
+            <summary>
+            How to sample the texture when the depth component of the UVW is too large/negative. Only applies to 3D textures.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Textures.Texture.Use(OpenTK.Graphics.OpenGL4.TextureUnit)">
+            <summary>
+            Uses the texture in a certain "unit", one of 16 adresses available in GLSL at a time.
+            </summary>
+            <param name="unit">The unit to use the texture at. Must be between TextureUnit.Texture0 and TextureUnit.Texture15 inclusive.</param>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Textures.Texture.UseAsImage(System.Int32)">
+            <summary>
+            Uses the texture as an image in a unit, allowing a program to arbitrarily read/write to it.
+            </summary>
+            <param name="unit">The unit to bind to. Must be between 0 and 7 inclusive.</param>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="T:SlopperEngine.Graphics.GPUResources.Textures.Texture2D">
+            <summary>
+            A 2D texture for use on the GPU.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.GPUResources.Textures.Texture2D.Create(System.Int32,System.Int32,OpenTK.Graphics.OpenGL4.SizedInternalFormat,OpenTK.Graphics.OpenGL4.PixelFormat,System.Byte[],OpenTK.Graphics.OpenGL4.TextureMagFilter,OpenTK.Graphics.OpenGL4.TextureMinFilter,OpenTK.Graphics.OpenGL4.TextureWrapMode)">
+            <summary>
+            Creates a 2D texture on the GPU.
+            </summary>
+            <param name="width">The width of the texture.</param>
+            <param name="height">The height of the texture.</param>
+            <param name="internalFormat">The format of pixels on the GPU. Directly correlates to VRAM usage.</param>
+            <param name="sentFormat">The format in which pixels are sent to the GPU. I don't exactly know what this is for.</param>
+            <param name="data">The data to initialize the texture with. Defaults to a black texture.</param>
+            <returns>A new Texture2D instance.</returns>
+        </member>
+        <member name="T:SlopperEngine.Graphics.Lighting.LightBuffer">
+            <summary>
+            Worst lighting buffer on television.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.Lighting.PointLightData">
+            <summary>
+            Stores the data of a point light.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.Loaders.MeshLoader">
+            <summary>
+            Loads meshes into VRAM from the disk.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.Loaders.MeshLoader.GetMesh(SlopperEngine.Core.Asset)">
+            <summary>
+            Doesn't work.
+            </summary>
+            <param name="asset">Don't even worry about it.</param>
+            <returns>Literally nothing.</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.Loaders.MeshLoader.SimpleFromWavefrontOBJ(SlopperEngine.Core.Asset)">
+            <summary>
+            Loads a wavefront OBJ mesh from a stream object.
+            </summary>
+            <param name="asset">The asset to load from. Function throws if this isn't loaded, or not set to read.</param>
+            <returns>A new Mesh instance, or an instance from the cache.</returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="T:SlopperEngine.Graphics.Loaders.TextureLoader">
+            <summary>
+            Loads a texture into VRAM from the disk.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.Loaders.TextureLoader.FromAsset(SlopperEngine.Core.Asset,OpenTK.Graphics.OpenGL4.SizedInternalFormat)">
+            <summary>
+            Gets a 2D texture from the asset with the desired format.
+            </summary>
+            <param name="asset">The asset to the texture file.</param>
+            <param name="format">The format on the GPU of the texture.</param>
+            <returns>A new Texture2D instance, or an instance from the cache.</returns>
+        </member>
+        <member name="T:SlopperEngine.Graphics.Material">
+            <summary>
+            A description of the uniforms contained in a shader.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Graphics.Material.Shader">
+            <summary>
+            The shader the material uses.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Graphics.Material.Uniforms">
+            <summary>
+            The uniforms contained within the material's shader. 
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.Material.Create(SlopperEngine.Graphics.SlopperShader)">
+            <summary>
+            Creates a material instance from a shader.
+            </summary>
+            <param name="shader">The shader to create the material from.</param>
+            <returns>A new Material instance.</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.Material.GetUniformIndexFromName(System.String)">
+            <summary>
+            Gets the index of a uniform in the uniforms[] array using the uniform's name.
+            </summary>
+            <param name="name">The name of the uniform.</param>
+            <returns>The index of a UniformDescription in the uniforms[] array. -1 if not present.</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.Material.GetUniformIndicesFromType(OpenTK.Graphics.OpenGL4.ActiveUniformType)">
+            <summary>
+            Gets a list of indices of uniforms in the uniforms[] array using the uniform's type.
+            </summary>
+            <param name="type">The type of the uniform to look for.</param>
+            <returns>The indices of the uniforms in the array that match the type.</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.Material.Use(SlopperEngine.Graphics.GPUResources.Meshes.MeshInfo,SlopperEngine.Rendering.SceneRenderer)">
+            <summary>
+            Uses the shader and sets the uniforms, preparing for a DrawShader call.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.PostProcessing.Bloom">
+            <summary>
+            Adds bloom to a texture.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.PostProcessing.Bloom.#ctor(OpenTK.Mathematics.Vector2i,System.Int32)">
+            <summary>
+            Creates a new instance of the bloom postprocessing effect. Expects the input texture to be Rgba16.
+            </summary>
+            <param name="mainTextureSize">The size of the texture to do postprocessing on. Using a different sized image may cause artifacts.</param>
+            <param name="mipCount">The amount of mips to use. If below 0, it will be automatically set to cause the lowest mip to be ~4*4 pixels in size.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.PostProcessing.Bloom.AddBloom(SlopperEngine.Graphics.GPUResources.Textures.Texture2D,System.Single,System.Single)">
+            <summary>
+            Adds bloom to the target texture. The target texture is expected to be the same size as when the Bloom class was constructed.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.ShaderGlobals">
+            <summary>
+            Values defined in the uniform at binding = 0. Only actually global per renderer.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.ShaderGlobals.CameraProjection">
+            <summary>
+            The camera's projection matrix.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.ShaderGlobals.CameraView">
+            <summary>
+            The camera's view matrix.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.ShaderGlobals.Model">
+            <summary>
+            The model to global matrix.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Graphics.ShaderGlobals.Time">
+            <summary>
+            The time from the start of the scene.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.ShadingLanguage.ParseFailedException">
+            <summary>
+            Thrown by the .sesl parser when any errors in syntax occur.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.ShadingLanguage.SyntaxTree">
+            <summary>
+            Describes the code in a .sesl file in an abstract and more usable way.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.ShadingLanguage.Token">
+            <summary>
+            The description of a token, with essential information for the compiler.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.ShadingLanguage.TokenScanner">
+            <summary>
+            Scans all words/tokens in the source string for a sloppershader.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.ShadingLanguage.TokenScanner.GetTokenName(SlopperEngine.Graphics.ShadingLanguage.Token)">
+            <summary>
+            Gets the name of a token.
+            </summary>
+            <param name="token">A token created by this scanner.</param>
+            <returns>The name of the token.</returns>
+        </member>
+        <member name="T:SlopperEngine.Graphics.ShadingLanguage.TokenTypes">
+            <summary>
+            Offers static methods for interacting with token types.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.ShadingLanguage.TokenTypes.GetSpecificTokenType(SlopperEngine.Graphics.ShadingLanguage.Token@,System.String)">
+            <summary>
+            Gets the SpecificTokenType of a token, taking only its TokenType and string into account.
+            </summary>
+            <param name="toSet">The token to detect the specific type of.</param>
+            <param name="source">The source code.</param>
+        </member>
+        <member name="M:SlopperEngine.Graphics.ShadingLanguage.TokenTypes.FromThreeCharOperator(System.Char,System.Char,System.Char)">
+            <summary>
+            Gets a SpecificTokenType associated with operators of length 3.
+            </summary>
+            <returns>NotIndexed if this isnt a recognised operator.</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.ShadingLanguage.TokenTypes.FromTwoCharOperator(System.Char,System.Char)">
+            <summary>
+            Gets a SpecificTokenType associated with operators of length 2.
+            </summary>
+            <returns>NotIndexed if this isnt a recognised operator.</returns>
+        </member>
+        <member name="M:SlopperEngine.Graphics.ShadingLanguage.TokenTypes.FromSingleCharOperator(System.Char)">
+            <summary>
+            Gets a SpecificTokenType associated with the character.
+            </summary>
+            <returns>NotIndexed if this isnt a recognised operator.</returns>
+        </member>
+        <member name="T:SlopperEngine.Graphics.ShadingLanguage.Transpiler">
+            <summary>
+            Parses .sesl source code into SlopperShader objects.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.ShadingLanguage.Transpiler.AddError(System.String)">
+            <summary>
+            Adds an error to the list. Will be thrown once parsing is complete.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.ShadingLanguage.Transpiler.AddCriticalError(System.String)">
+            <summary>
+            For when the parsing error is so bad you dont even know how to continue parsing. Immediately throws this and previous errors.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.ShadingLanguage.Transpiler.Parse(System.String)">
+            <summary>
+            Parses the source code from a .sesl file, and creates a SlopperShader.
+            </summary>
+            <param name="source">The source code to use.</param>
+            <exception cref="T:SlopperEngine.Graphics.ShadingLanguage.ParseFailedException"></exception>
+        </member>
+        <member name="T:SlopperEngine.Graphics.ShadingLanguage.TypeExtensions">
+            <summary>
+            Mostly extensions for chars, to assist the scanning stage of the parser.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Graphics.SlopperShader">
+            <summary>
+            A dynamically recompiled shader, conforming to the needs of a Mesh's format and the renderer.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Graphics.SlopperShader.Create(SlopperEngine.Core.Asset)">
+            <summary>
+            Creates a SlopperShader.
+            </summary>
+            <param name="asset">The .sesl file to load the shader from.</param>
+            <exception cref="T:System.IO.FileNotFoundException"></exception>
+        </member>
+        <member name="T:SlopperEngine.Graphics.UniformDescription">
+            <summary>
+            Describes a shader's uniform. Also has a value field for some reason. This feels like an oversight.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Physics.Collider">
+            <summary>
+            Abstract base class for collidable objects.
+            </summary>
+            <param name="mass">The initial mass of the collider.</param>
+        </member>
+        <member name="M:SlopperEngine.Physics.Collider.#ctor(System.Single)">
+            <summary>
+            Abstract base class for collidable objects.
+            </summary>
+            <param name="mass">The initial mass of the collider.</param>
+        </member>
+        <member name="P:SlopperEngine.Physics.Collider.Mass">
+            <summary>
+            The mass of the collider.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Physics.Collider.UpdateParentColliders">
+            <summary>
+            Helper function for convenience.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Physics.Collider.AddColliderTo(BepuPhysics.RigidPose,BepuPhysics.Collidables.CompoundBuilder@)">
+            <summary>
+            Adds this collider to the compound shape.
+            </summary>
+            <param name="pose">The offset of the collider.</param>
+            <param name="builder">The builder to add to.</param>
+        </member>
+        <member name="T:SlopperEngine.Physics.Colliders.BoxCollider">
+            <summary>
+            A collider in the shape of a box.
+            </summary>
+            <param name="mass">How heavy the box is.</param>
+            <param name="dimensions">How large the box is.</param>
+        </member>
+        <member name="M:SlopperEngine.Physics.Colliders.BoxCollider.#ctor(System.Single,OpenTK.Mathematics.Vector3)">
+            <summary>
+            A collider in the shape of a box.
+            </summary>
+            <param name="mass">How heavy the box is.</param>
+            <param name="dimensions">How large the box is.</param>
+        </member>
+        <member name="M:SlopperEngine.Physics.Colliders.BoxCollider.#ctor">
+            <summary>
+            Creates a BoxCollider of mass and dimensions 1. 
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Physics.Colliders.BoxCollider.Dimensions">
+            <summary>
+            The size of the box.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Physics.Colliders.SphereCollider">
+            <summary>
+            A simple spherical collider.
+            </summary>
+            <param name="mass">The mass of the sphere.</param>
+            <param name="radius">The size of the sphere.</param>
+        </member>
+        <member name="M:SlopperEngine.Physics.Colliders.SphereCollider.#ctor(System.Single,System.Single)">
+            <summary>
+            A simple spherical collider.
+            </summary>
+            <param name="mass">The mass of the sphere.</param>
+            <param name="radius">The size of the sphere.</param>
+        </member>
+        <member name="M:SlopperEngine.Physics.Colliders.SphereCollider.#ctor">
+            <summary>
+            Creates a SphereCollider with mass and radius 1.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Physics.Colliders.SphereCollider.Radius">
+            <summary>
+            The radius of this collider.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Physics.PhysicsMethodExtensions">
+            <summary>
+            Extends methods to help in physics.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Physics.PhysicsObject">
+            <summary>
+            A SceneObject that can be transformed and rotated, but not scaled.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Physics.PhysicsObject.Position">
+            <summary>
+            The position of this PhysicsObject. Usually global position. Gets interpolated between physics frames.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Physics.PhysicsObject.Rotation">
+            <summary>
+            The rotation of this PhysicsObject. Usually global rotation. Gets interpolated between physics frames.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Physics.PhysicsObject.LocalMatrix">
+            <summary>
+            Gets the matrix to transform the SceneObject3D's space to the parent's object space.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Physics.PhysicsObject.OnPositionChange(OpenTK.Mathematics.Vector3)">
+            <summary>
+            Gets called when the position is externally set. Should handle physics engine calls in overriding classes.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Physics.PhysicsObject.OnRotationChange(OpenTK.Mathematics.Quaternion)">
+            <summary>
+            Gets called when the rotation is externally set. Should handle physics engine calls in overriding classes.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Physics.Rigidbody">
+            <summary>
+            An object with physics simulation. Requires a collider object as child.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Physics.Rigidbody.Colliders">
+            <summary>
+            The colliders the RigidBody is composed of.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Physics.Rigidbody.IsKinematic">
+            <summary>
+            Whether or not forces affect this RigidBody.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Physics.Rigidbody.RecenterColliders">
+            <summary>
+            Whether or not to recenter all the colliders, so the center of mass is properly placed.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Physics.Rigidbody.Velocity">
+            <summary>
+            The linear velocity of the RigidBody in units per second.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Physics.Rigidbody.AngularVelocity">
+            <summary>
+            The angular velocity of the RigidBody, seemingly in exponential map axis-angle representation.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Physics.Rigidbody.AddImpulse(OpenTK.Mathematics.Vector3,OpenTK.Mathematics.Vector3)">
+            <summary>
+            Adds a impulse to the RigidBody.
+            </summary>
+            <param name="impulse">The impulse to apply to the RigidBody.</param>
+            <param name="offset">The offset to apply the force at.</param>
+        </member>
+        <member name="M:SlopperEngine.Physics.Rigidbody.AddAngularImpulse(OpenTK.Mathematics.Vector3)">
+            <summary>
+            Adds an angular impulse to the RigidBody.
+            </summary>
+            <param name="impulse">I really don't know what this does to be honest.</param>
+        </member>
+        <member name="M:SlopperEngine.Physics.Rigidbody.UpdateColliders">
+            <summary>
+            Updates the RigidBody's shape.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Physics.SceneNarrowPhaseCallbacks">
+            <summary>
+            Slopperengine's callbacks for Bepu's narrow phase.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Physics.SceneNarrowPhaseCallbacks.#ctor(SlopperEngine.Core.SceneComponents.PhysicsHandler)">
+            <summary>
+            Slopperengine's callbacks for Bepu's narrow phase.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Physics.ScenePoseIntegratorCallbacks">
+            <summary>
+            Slopperengine's callbacks for Bepu's PoseIntegrator.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Physics.ScenePoseIntegratorCallbacks.#ctor(SlopperEngine.Core.SceneComponents.PhysicsHandler)">
+            <summary>
+            Slopperengine's callbacks for Bepu's PoseIntegrator.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Rendering.Camera">
+            <summary>
+            Renders the scene.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Rendering.DebugRenderer">
+            <summary>
+            The simplest renderer possible - renders the scene with no regard for lighting, transparency, or other effects.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Rendering.Drawcall">
+            <summary>
+            Contains basic information about a drawcall.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Rendering.MeshRenderer">
+            <summary>
+            Renders a mesh using a material.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Rendering.PointLight">
+            <summary>
+            A light which radiates a spherical area around it, and casts no shadow.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Rendering.PointLight.Radius">
+            <summary>
+            The radius of this point light.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Rendering.PointLight.Color">
+            <summary>
+            The color of this point light.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Rendering.PointLight.Sharpness">
+            <summary>
+            How sharply this point light falls off.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Rendering.SceneRenderer">
+            <summary>
+            Special SceneObject for renderers - this allows for multithreading by handling them seperately
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Rendering.SceneRenderer.ClearColor">
+            <summary>
+            The background color of the rendered frame, if used by inheriting classes.
+            </summary>
+        </member>
+        <member name="E:SlopperEngine.Rendering.SceneRenderer.OnPreRender">
+            <summary>
+            Gets called ONCE on the render thread.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Rendering.SceneRenderer.InputUpdate(SlopperEngine.Core.InputUpdateArgs)">
+            <summary>
+            Updates user input, if applicable
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Rendering.SceneRenderer.Render(SlopperEngine.Core.FrameUpdateArgs)">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Rendering.UIRenderer">
+            <summary>
+            Renders and updates UIElements.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.ChildContainers.ChildList`2">
+            <summary>
+            Stores a number of children of a particular type.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.ChildContainers.ChildList`2.All">
+            <summary>
+            All children as an IEnumerable.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.ChildContainers.ChildList`2.Add(`0)">
+            <summary>
+            Adds a child to this SceneObject.
+            </summary>
+            <param name="newChild">The child to add.</param>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.ChildContainers.ChildList`2.FirstOfType``1">
+            <summary>
+            Gets the first child of the SceneObject of a specific type.
+            </summary>
+            <typeparam name="TToGet">The type of child to get.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.ChildContainers.ChildList`2.AllOfType``1">
+            <summary>
+            Gets a list of children of this SceneObject of a specific type.
+            </summary>
+            <typeparam name="TToGet">The type of children to get.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.ChildContainers.IChildListEvents`1">
+            <summary>
+            Events for ChildLists.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.ChildContainers.IChildListEvents`1.OnChildAdded(`0,System.Int32)">
+            <summary>
+            Gets called after a child gets added to the list.
+            </summary>
+            <param name="child">The child that got added.</param>
+            <param name="childIndex">The index of the child that got added.</param>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.ChildContainers.IChildListEvents`1.OnChildRemoved(`0,System.Int32)">
+            <summary>
+            Gets called after a child gets removed from the list.
+            </summary>
+            <param name="child">The child that got removed.</param>
+            <param name="previousIndex">The index the child had before it got removed.</param>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.ChildContainers.NoEvents`1">
+            <summary>
+            Handles the absence of events on a ChildList.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.ChildContainers.SingleChild`2">
+            <summary>
+            Stores a single child of a SceneObject.
+            </summary>
+            <typeparam name="TSceneObject">The type of SceneObject to store.</typeparam>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.ChildContainers.SingleChild`2.Value">
+            <summary>
+            The child stored in the SingleChild.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.Scene">
+            <summary>
+            Contains a set of SceneObjects, and handles their update loop.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.Scene.Active">
+            <summary>
+            Whether or not the scene receives updates from the main context. Inactive scenes can still manually be updated.
+            </summary>
+        </member>
+        <member name="E:SlopperEngine.SceneObjects.Scene.OnActiveToggled">
+            <summary>
+            Gets called when the scene gets set to active or inactive.
+            </summary>
+        </member>
+        <member name="E:SlopperEngine.SceneObjects.Scene.OnDestroy">
+            <summary>
+            Gets called when the scene gets destroyed.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.Scene.ActiveScenes">
+            <summary>
+            All scenes will be updated by the main context.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.SceneObjects.Scene.Components">
+            <summary>
+            The components of this scene. These can act as singletons, and generally interact with the scenes through SceneData.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.SceneObjects.Scene.Renderers">
+            <summary>
+            The renderers of this scene.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.Scene.UpdateHandler">
+            <summary>
+            The main update handler of this scene.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.Scene.SceneRenderer">
+            <summary>
+            The main renderer of this scene.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.Scene.PhysicsHandler">
+            <summary>
+            The main physics handler of this scene.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.CreateDefault">
+            <summary>
+            Creates a scene with several useful components pre-added.
+            </summary>
+            <returns>A scene with a DebugRenderer, UpdateHandler, and a PhysicsHandler.</returns>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.CreateEmpty">
+            <summary>
+            Creates a scene with no attached components. It will not update or render its children.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.FrameUpdate(SlopperEngine.Core.FrameUpdateArgs)">
+            <summary>
+            Updates the scene.
+            </summary>
+            <param name="update">Arguments for the update.</param>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.InputUpdate(SlopperEngine.Core.InputUpdateArgs)">
+            <summary>
+            Updates the scene's inputs.
+            </summary>
+            <param name="update">Arguments for the update.</param>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.Render(SlopperEngine.Core.FrameUpdateArgs)">
+            <summary>
+            Renders the scene.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.GetDataContainerEnumerable``1">
+            <summary>
+            Gets a SceneDataContainer as IEnumerable. Should not be modified.
+            </summary>
+            <typeparam name="T">The type of scene data to enumerate.</typeparam>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.RegisterSceneData``1(``0)">
+            <summary>
+            Registers data to the scene.
+            </summary>
+            <typeparam name="T">The type of data to register.</typeparam>
+            <param name="sceneData">The data to register.</param>
+            <returns>The unique handle to delete this data with later.</returns>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.UnregisterSceneData``1(SlopperEngine.Core.SceneData.SceneDataHandle,``0)">
+            <summary>
+            Unregisters data from the scene.
+            </summary>
+            <typeparam name="T">The data to unregister.</typeparam>
+            <param name="handle">The data's handle.</param>
+            <param name="data">The data.</param>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.AddDataContainer``1(SlopperEngine.Core.SceneData.SceneDataContainer{``0})">
+            <summary>
+            Adds a data container for a specific type.
+            </summary>
+            <typeparam name="T">The type of data to contain.</typeparam>
+            <param name="container">The container to add to the scene.</param>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.TryAddDataContainerNew``2">
+            <summary>
+            Adds a specific type of data container, unless the scene contains one already.
+            </summary>
+            <typeparam name="T">The type of SceneData.</typeparam>
+            <typeparam name="TContainer">The type of the container to possibly add.</typeparam>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.UpdateRegister">
+            <summary>
+            Updates the Register functions of SceneObjects. Should be used generously in scene interoperation.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Scene.CheckCachedComponents">
+            <summary>
+            Sets the cached components (Scene.SceneRenderer, Scene.UpdateHandler, etc).
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.SceneObject">
+            <summary>
+            An object that represents a presence within a Scene.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.SceneObject.ChildContainer">
+            <summary>
+            Base class for child containers.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.SceneObject.ChildContainer.Owner">
+            <summary>
+            The owner of this ChildContainer. SceneObjects added to this container will be children of the owner.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.SceneObject.ChildContainer.Count">
+            <summary>
+            The amount of children this ChildContainer holds.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.ChildContainer.GetByIndex(System.Int32)">
+            <summary>
+            Gets a child by index.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.ChildContainer.RemoveByIndex(System.Int32)">
+            <summary>
+            Removes a child by index.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.ChildContainer.TryAdd(SlopperEngine.SceneObjects.SceneObject)">
+            <summary>
+            Adds a child to the container. Avoid using in favour of container specific functions.
+            </summary>
+            <returns>Whether or not the object was added.</returns>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.ChildContainer.SetChildListIndex(SlopperEngine.SceneObjects.SceneObject,System.Int32)">
+            <summary>
+            Sets the child's parentListIndex.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.ChildContainer.UnsetChildListIndex(SlopperEngine.SceneObjects.SceneObject)">
+            <summary>
+            Sets the child's parentListIndex to -1, and its parentList to null.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.ChildContainer.TryUnregister(SlopperEngine.SceneObjects.SceneObject)">
+            <summary>
+            Unregisters the child if it is registered.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.ChildContainer.TryRegister(SlopperEngine.SceneObjects.SceneObject)">
+            <summary>
+            Registers the child if this container is registered.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.ChildContainer.SetAllChildrensListIndex">
+            <summary>
+            Sets the list index for all children.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.SceneObject.DebugFunctions">
+            <summary>
+            Readonly static debug information about SceneObjects.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.DebugFunctions.WriteOutTree(SlopperEngine.SceneObjects.SceneObject)">
+            <summary>
+            Writes out all children of an object, public or private.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.DebugFunctions.RecursiveChildCount(SlopperEngine.SceneObjects.SceneObject)">
+            <summary>
+            Gets the amount of public and private children a SceneObject has.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.SceneObject.Parent">
+            <summary>
+            The parent of the object.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.SceneObject.ParentContainer">
+            <summary>
+            The childcontainer containing this object.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.SceneObject.InScene">
+            <summary>
+            Whether the object is within a Scene.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.SceneObject.Scene">
+            <summary>
+            The scene this object is in.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.SceneObject.Destroyed">
+            <summary>
+            Whether the object exists or is destroyed. Destroyed objects cannot be used in Scenes.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.SceneObject.Children">
+            <summary>
+            The default list of children for this SceneObject. Can contain any type of SceneObject.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.#ctor">
+            <summary>
+            Creates a SceneObject.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.Remove">
+            <summary>
+            Removes this SceneObject from its parent.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.Destroy">
+            <summary>
+            Destroys this SceneObject. After destruction, a SceneObject will insist that it is null, and can no longer be used in scenes.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.OnDestroyed">
+            <summary>
+            Gets called after the SceneObject is destroyed.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.GetGlobalTransform">
+            <summary>
+            Gets the transform from this object's space to global space, also known as the model-to-global space matrix.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.SceneObject.TransformFromParent(OpenTK.Mathematics.Matrix4@)">
+            <summary>
+            In overriding classes, this function should transform the parent's transform to the local transform.
+            </summary>
+            <param name="parentMatrix">The parent's transform.</param>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.SceneObject3D">
+            <summary>
+            A SceneObject with a 3-dimensional transform. Describes rotation, scale, and position. Relative to its parent.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.SceneObject3D.LocalMatrix">
+            <summary>
+            Gets the matrix to transform the SceneObject3D's space to the parent's object space.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.Serialization.OnSerializeArgs">
+            <summary>
+            Serializes objects.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.Serialization.OnSerializeArgs.IsWriter">
+            <summary>
+            True if this Serializer writes to given values (overwrites the ref).
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.SceneObjects.Serialization.OnSerializeArgs.IsReader">
+            <summary>
+            True if this Serializer reads from given values (leaves the ref intact).
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Serialization.OnSerializeArgs.Serialize``1(``0@)">
+            <summary>
+            Serializes a given value.
+            </summary>
+            <param name="Value">The value to serialize.</param>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Serialization.OnSerializeArgs.CallAfterSerialize(System.Action)">
+            <summary>
+            Calls the method after serialization / deserialization finishes. It's safe to interact with objects higher in the tree after this.
+            </summary>
+            <param name="methodToCall">The method to have called after the entire tree is serialized.</param>
+        </member>
+        <member name="T:SlopperEngine.SceneObjects.Serialization.SerializedObject">
+            <summary>
+            The serialized form of a SceneObject tree.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Serialization.SerializedObject.LoadBinaryUncompressed(SlopperEngine.Core.Asset)">
+            <summary>
+            Loads a BinaryUncompressed format SerializedObject.
+            </summary>
+            <param name="asset">The asset to load from.</param>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Serialization.SerializedObject.LoadBinaryUncompressed(System.IO.Stream)">
+            <summary>
+            Loads a BinaryUncompressed format SerializedObject from a stream.
+            </summary>
+            <param name="stream">The stream to load from.</param>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Serialization.SerializedObject.SaveBinaryUncompressed(SlopperEngine.Core.Asset)">
+            <summary>
+            Saves this SerializedObject to a file in the BinaryUncompressed format.
+            </summary>
+            <param name="asset">The asset to save to.</param>
+            <returns>Whether or not the SerializedObject was saved successfully.</returns>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Serialization.SerializedObject.SaveBinaryUncompressed(System.IO.Stream)">
+            <summary>
+            Saves this SerializedObject to a stream in the BinaryUncompressed format.
+            </summary>
+            <param name="stream">The stream to save to.</param>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Serialization.SerializedObject.#ctor(SlopperEngine.SceneObjects.SceneObject)">
+            <summary>
+            Serializes a SceneObject. The SceneObject will be temporarily unregistered.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Serialization.SerializedObject.#ctor(System.Object)">
+            <summary>
+            Serializes any object.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Serialization.SerializedObject.CallAfterSerialize(System.Action)">
+            <summary>
+            Calls the method after serialization / deserialization finishes. It's safe to interact with objects higher in the tree after this.
+            </summary>
+            <param name="methodToCall">The method to have called after the entire tree is serialized.</param>
+        </member>
+        <member name="M:SlopperEngine.SceneObjects.Serialization.SerializedObject.CallOnSerializeQuick(System.Reflection.MethodInfo,System.Object,SlopperEngine.SceneObjects.Serialization.OnSerializeArgs)">
+            <summary>
+            Calls the OnSerialize method quickly, if the object can actually have it called. Or if it can't - this is VERY UNSAFE!!!
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Base.Alignment">
+            <summary>
+            Alignment options for UI.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Base.Alignment.Min">
+            <summary>
+            The element should align to the minimum side. (Left or downwards)
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Base.Alignment.Middle">
+            <summary>
+            The element should align with the center.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Base.Alignment.Max">
+            <summary>
+            The element should align to the maximum side. (Right or upwards)
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Base.MouseEvent">
+            <summary>
+            Represents a blockable event of the mouse in UI.
+            </summary>
+            <param name="position">NDC mouse position.</param>
+            <param name="delta">NDC mouse delta.</param>
+            <param name="scrollDelta">The scrollwheel delta.</param>
+            <param name="pressedButton">A button that was pressed this frame.</param>
+            <param name="releasedButton">A button that was released this frame.</param>
+            <param name="state">The mouse state. Should be passed for querying if a button is held.</param>
+            <param name="keyboardState">The keyboardState. Should be passed for quering what modifiers are held.</param>
+            <param name="type">What type of event this object represents.</param>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.MouseEvent.#ctor(OpenTK.Mathematics.Vector2,OpenTK.Mathematics.Vector2,OpenTK.Mathematics.Vector2,OpenTK.Windowing.GraphicsLibraryFramework.MouseButton,OpenTK.Windowing.GraphicsLibraryFramework.MouseButton,OpenTK.Windowing.GraphicsLibraryFramework.MouseState,OpenTK.Windowing.GraphicsLibraryFramework.KeyboardState,SlopperEngine.UI.Base.MouseEventType)">
+            <summary>
+            Represents a blockable event of the mouse in UI.
+            </summary>
+            <param name="position">NDC mouse position.</param>
+            <param name="delta">NDC mouse delta.</param>
+            <param name="scrollDelta">The scrollwheel delta.</param>
+            <param name="pressedButton">A button that was pressed this frame.</param>
+            <param name="releasedButton">A button that was released this frame.</param>
+            <param name="state">The mouse state. Should be passed for querying if a button is held.</param>
+            <param name="keyboardState">The keyboardState. Should be passed for quering what modifiers are held.</param>
+            <param name="type">What type of event this object represents.</param>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.MouseEvent.Type">
+            <summary>
+            What type of event this object represents.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.MouseEvent.NDCPosition">
+            <summary>
+            The mouse position in UI global space.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.MouseEvent.NDCDelta">
+            <summary>
+            The mouse delta in UI global space.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.MouseEvent.ScrollDelta">
+            <summary>
+            How many pixels the mouse has scrolled this frame. Default if this is event does not represent a scroll.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.MouseEvent.PressedButton">
+            <summary>
+            The button that was pressed in this event. -1 (invalid enum value) if this event does not represent a click.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.MouseEvent.ReleasedButton">
+            <summary>
+            The button that was released in this event. -1 (invalid enum value) if this event does not represent a mouse button release.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.MouseEvent.Use">
+            <summary>
+            Uses the event, ensuring no other UIElement receives it.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.MouseEvent.Block">
+            <summary>
+            Blocks the event, ensuring only UIElements rendered over this can receive it.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.MouseEvent.IsButtonDown(OpenTK.Windowing.GraphicsLibraryFramework.MouseButton)">
+            <summary>
+            Gets a bool indicating whether a given button is held.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.MouseEvent.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys)">
+            <summary>
+            Gets a bool indicating whether the given key is held.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Base.UIElement">
+            <summary>
+            Describes an element of the UI, with a texture and an AABB shape.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Base.UIElement.LocalShape">
+            <summary>
+            The size of the UIElement relative to the container.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElement.UIChildren">
+            <summary>
+            The children of the UIElement to consider part of the UI.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElement.Layout">
+            <summary>
+            The layout of the UI element. By default, children do not get automatically laid out.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElement.Style">
+            <summary>
+            The style of the element.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElement.LastRenderer">
+            <summary>
+            The last renderer that used this UIElement.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElement.LastGlobalShape">
+            <summary>
+            The last global shape that was calculated of this UIElement, in normalized device coordinates.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElement.LastSizeConstraints">
+            <summary>
+            The last size constraints of this UIElement.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElement.LastGlobalScissor">
+            <summary>
+            The last global scissor region that was calculated of this UIElement, in normalized device coordinates.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElement.LastChildrenBounds">
+            <summary>
+            The last global bounds that were calculated of the UIElement's children. 
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElement.internalUIChildren">
+            <summary>
+            A set of hidden UI elements.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UIElement.GetMaterial">
+            <summary>
+            Gets the material for this UIElement. Return null to render nothing at all. This function should be pure (does not change any elements).
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UIElement.OnStyleChanged">
+            <summary>
+            Gets called after the style of the UIElement gets changed.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UIElement.GetSizeConstraints">
+            <summary>
+            Gets the size constraints for this UIElement. 
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UIElement.GetScissorRegion">
+            <summary>
+            The region of range 0-1 inside this UIElement where children should be cut out of. This function should be pure (does not change any elements).
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UIElement.HandleEvent(SlopperEngine.UI.Base.MouseEvent@)">
+            <summary>
+            Handles a mouse event. Remember to call e.Use() when using info from the event in any way (or to simply block it).
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UIElement.IncludeInChildbounds">
+            <summary>
+            Whether or not this element should have its bounds included in ChildBounds.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Base.UIElement.UIChildEvents">
+            <summary>
+            Public only out of necessity. Don't use.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UIElement.UIChildEvents.#ctor(SlopperEngine.UI.Base.UIElement)">
+            <summary>
+            Public only out of necessity. Don't use.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Base.UIElementSize">
+            <summary>
+            Describes the scaling of a UI element.
+            </summary>
+            <param name="GrowX">The way the element should grow along the X axis.</param>
+            <param name="GrowY">The way the element should grow along the Y axis.</param>
+            <param name="MinimumSizeX">The minimum size in pixels along the X axis.</param>
+            <param name="MinimumSizeY">The minimum size in pixels along the Y axis.</param>
+            <param name="MaximumSizeX">The maximum size in pixels along the X axis.</param>
+            <param name="MaximumSizeY">The maximum size in pixels along the Y axis.</param>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UIElementSize.#ctor(SlopperEngine.UI.Base.Alignment,SlopperEngine.UI.Base.Alignment,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Describes the scaling of a UI element.
+            </summary>
+            <param name="GrowX">The way the element should grow along the X axis.</param>
+            <param name="GrowY">The way the element should grow along the Y axis.</param>
+            <param name="MinimumSizeX">The minimum size in pixels along the X axis.</param>
+            <param name="MinimumSizeY">The minimum size in pixels along the Y axis.</param>
+            <param name="MaximumSizeX">The maximum size in pixels along the X axis.</param>
+            <param name="MaximumSizeY">The maximum size in pixels along the Y axis.</param>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElementSize.GrowX">
+            <summary>The way the element should grow along the X axis.</summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElementSize.GrowY">
+            <summary>The way the element should grow along the Y axis.</summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElementSize.MinimumSizeX">
+            <summary>The minimum size in pixels along the X axis.</summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElementSize.MinimumSizeY">
+            <summary>The minimum size in pixels along the Y axis.</summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElementSize.MaximumSizeX">
+            <summary>The maximum size in pixels along the X axis.</summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Base.UIElementSize.MaximumSizeY">
+            <summary>The maximum size in pixels along the Y axis.</summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Base.UIRootUpdate">
+            <summary>
+            Handles to the update functions of the UIElement root.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Base.UISize">
+            <summary>
+            Represents a size in UI, either relative to the parent or a constant size in pixels.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UISize.FromPixels(OpenTK.Mathematics.Vector2i)">
+            <summary>
+            Creates a UISize that has a constant size in pixels on the target screen.
+            </summary>
+            <param name="sizePixels">The size in pixels.</param>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UISize.RelativeToParent(OpenTK.Mathematics.Vector2)">
+            <summary>
+            Creates a UISize that has a size relative to its parent.
+            </summary>
+            <param name="sizeRelative">The size relative to the parent in range 0-1.</param>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UISize.RelativeToRoot(OpenTK.Mathematics.Vector2)">
+            <summary>
+            Creates a UISize that has a size relative to its UI root.
+            </summary>
+            <param name="sizeGlobal">The size relative to global space, range 0-1.</param>
+        </member>
+        <member name="M:SlopperEngine.UI.Base.UISize.GetLocalSize(OpenTK.Mathematics.Box2,SlopperEngine.Rendering.UIRenderer)">
+            <summary>
+            Gets this UISize's size relative to a parent's global shape.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Display.ColorRectangle">
+            <summary>
+            Shows a color on the screen.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Display.ColorRectangle.Color">
+            <summary>
+            The color of this element.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Display.DisplayElement">
+            <summary>
+            Abstract base class for simple display objects.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Display.DisplayElement.BlockAnyInput">
+            <summary>
+            Whether this element blocks all inputs from passing through.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Display.DisplayElement.BlockClicks">
+            <summary>
+            Whether this element should block click events from passing through.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Display.DisplayElement.BlockScrolls">
+            <summary>
+            Whether this element should block scroll events from passing through.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Display.ImageRectangle">
+            <summary>
+            Shows a texture on the screen.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Display.ImageRectangle.Texture">
+            <summary>
+            The texture to show.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Display.ImageRectangle.Color">
+            <summary>
+            The color to multiply the element by.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Display.MaterialRectangle">
+            <summary>
+            Shows a custom material on screen.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Display.MaterialRectangle.Material">
+            <summary>
+            The material to display.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Interaction.BaseButton">
+            <summary>
+            Base class for buttons. Handles most events.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.BaseButton.Enabled">
+            <summary>
+            Whether or not the button can be interacted with.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Interaction.ScrollableArea">
+            <summary>
+            A UIElement that automatically adds a scrollbar when its children exceed its bounds.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Interaction.ScrollableArea.HorizontalContentAlignment">
+            <summary>
+            How to horizontally align the content when the content is thinner than the container.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Interaction.ScrollableArea.VerticalContentAlignment">
+            <summary>
+            How to vertically align the content when the content is shorter than the container.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Interaction.ScrollableArea.Background">
+            <summary>
+            The background of this scrollable area. Scrollbars and the content will show over this.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Interaction.ScrollableArea.ScrollSensitivity">
+            <summary>
+            How many pixels per scroll bump the area should move. I don't think this is a remotely accurate description but it works well enough.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.ScrollableArea.HorizontalDisplay">
+            <summary>
+            How to display the horizontal slider.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.ScrollableArea.VerticalDisplay">
+            <summary>
+            How to display the vertical slider.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.ScrollableArea.ScrollbarSize">
+            <summary>
+            The size of the scrollbars. 
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Interaction.ScrollableArea.ScrollBarDisplayMode">
+            <summary>
+            How the scrollbar should display.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Interaction.Slider">
+            <summary>
+            A UIElement that can slide up and down or back and forth in response to mouse input.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.Slider.ScrollValue">
+            <summary>
+            How far up or down the slider is. 0 for min value (down/left), 1 for max value (up/right). 
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.Slider.ContentToContainerRatio">
+            <summary>
+            The ratio between the content and the container. If set below one, the slider will not be able to move.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.Slider.Vertical">
+            <summary>
+            Whether the slider is vertical. Horizontal if false.
+            </summary>
+        </member>
+        <member name="E:SlopperEngine.UI.Interaction.Slider.OnScroll">
+            <summary>
+            Gets called when the slider gets changed.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Interaction.TextButton">
+            <summary>
+            A button with text on it.
+            </summary>
+        </member>
+        <member name="E:SlopperEngine.UI.Interaction.TextButton.OnButtonPressed">
+            <summary>
+            Gets called when the text button gets pressed.
+            </summary>
+        </member>
+        <member name="E:SlopperEngine.UI.Interaction.TextButton.OnButtonReleased">
+            <summary>
+            Gets called when the text button gets released.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.TextButton.Text">
+            <summary>
+            The text to display on this button.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Interaction.TextField">
+            <summary>
+            An editable line of text.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.TextField.Text">
+            <summary>
+            The text that is editable/shown in the TextField.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.TextField.Length">
+            <summary>
+            The maximum amount of characters shown in the text field.
+            </summary>
+        </member>
+        <member name="E:SlopperEngine.UI.Interaction.TextField.OnTextChanged">
+            <summary>
+            Gets called when the text of the text field gets changed in any way.
+            </summary>
+        </member>
+        <member name="E:SlopperEngine.UI.Interaction.TextField.OnEntered">
+            <summary>
+            Gets called when the textbox is clicked off, or if the Enter key gets hit.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Interaction.TextField.Horizontal">
+            <summary>
+            How to horizontally align the box. Max (rightward) on default.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Interaction.TextField.Vertical">
+            <summary>
+            How to vertically align the box. Min (downward) on default.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Interaction.ToggleButton">
+            <summary>
+            A toggle button.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Interaction.ToggleButton.Horizontal">
+            <summary>
+            How to horizontally align the button. Max (rightward) on default.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Interaction.ToggleButton.Vertical">
+            <summary>
+            How to vertically align the button. Min (downward) on default.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Interaction.ToggleButton.Checked">
+            <summary>
+            Whether or not the toggle has been checked.
+            </summary>
+        </member>
+        <member name="E:SlopperEngine.UI.Interaction.ToggleButton.OnToggle">
+            <summary>
+            Gets called when the button gets toggled in any way.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Layout.LayoutHandler">
+            <summary>
+            Base class for UI layout handlers.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Layout.LayoutHandler.LayoutChildren(SlopperEngine.UI.Base.UIElement,OpenTK.Mathematics.Box2)">
+            <summary>
+            Gets called when the owner starts laying out its children.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Layout.LinearArrangedLayout">
+            <summary>
+            Lays out children in an axis aligned line.
+            </summary>.
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.LinearArrangedLayout.IsLayoutHorizontal">
+            <summary>
+            Whether the elements should be arranged horizontally or vertically.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.LinearArrangedLayout.StartAtMax">
+            <summary>
+            Whether the elements should be arranged from max or from min.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.LinearArrangedLayout.ChildAlignment">
+            <summary>
+            How the elements should be arranged tangent to their axis.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.LinearArrangedLayout.Padding">
+            <summary>
+            The padding to use between elements.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Layout.Spacer">
+            <summary>
+            Invisible element with externally customizeable shape.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.Spacer.MinWidth">
+            <summary>
+            The minimum width in pixels.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.Spacer.MinHeight">
+            <summary>
+            The minimum height in pixels.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.Spacer.MaxWidth">
+            <summary>
+            The maximum width in pixels.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.Spacer.MaxHeight">
+            <summary>
+            The maximum height in pixels.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.Spacer.GrowDirectionX">
+            <summary>
+            The grow direction on the x axis, used when the shape doesn't meet the MinWidth or MaxWidth.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.Spacer.GrowDirectionY">
+            <summary>
+            The grow direction on the y axis, used when the shape doesn't meet the MinHeight or MaxHeight.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.Spacer.ScissorRegion">
+            <summary>
+            Decides where in the spacer's space elements should be cut off.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Layout.Spacer.IncludeInChildBounds">
+            <summary>
+            Whether or not this spacer and its children contribute to its parent's perceived bounds.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Style.BasicStyle">
+            <summary>
+            A basic style struct. Contains a handful of colors for consistent UI.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Style.BasicStyle.BackgroundStrong">
+            <summary>
+            Stronger version of the background color (darkest assuming dark mode).
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Style.BasicStyle.BackgroundWeak">
+            <summary>
+            Weaker version of the background color.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Style.BasicStyle.ForegroundWeak">
+            <summary>
+            Weaker version of the foreground color.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Style.BasicStyle.ForegroundStrong">
+            <summary>
+            Stronger version of the foreground color (brightest assuming dark mode). 
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Style.BasicStyle.Tint">
+            <summary>
+            The brightest color in the style.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Style.BasicStyle.Highlight">
+            <summary>
+            A color for marking selected elements (like text).
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Style.BasicStyle.Font">
+            <summary>
+            The font for the style.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Style.BasicStyle.FontScale">
+            <summary>
+            The font's scale.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Style.BasicStyle.DefaultStyle">
+            <summary>
+            The style objects use by default.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Style.BasicStyle.FullyTransparent">
+            <summary>
+            A fully transparent style. Useful for fully overriding the look of certain elements.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Style.BasicStyle.#ctor(OpenTK.Mathematics.Color4,OpenTK.Mathematics.Color4,OpenTK.Mathematics.Color4,OpenTK.Mathematics.Color4,OpenTK.Mathematics.Color4,OpenTK.Mathematics.Color4,SlopperEngine.UI.Text.RasterFont,System.Int32)">
+            <summary>
+            Creates a style using ALL the colors.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.UI.Text.RasterFont">
+            <summary>
+            Describes a monospace font, made from a texture.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Text.RasterFont.FourXEight">
+            <summary>
+            Four by eight pixel size font.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Text.RasterFont.EightXSixteen">
+            <summary>
+            Eight by sixteen pixel size font.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Text.RasterFont.ReadTexture(OpenTK.Mathematics.Vector2i)">
+            <summary>
+            Reads the font's value at a position in the spritesheet.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Text.RasterFont.GetCharPosition(System.Char)">
+            <summary>
+            Gets the character's position in the spritesheet.
+            </summary>
+            <param name="c">The character to find the position of.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SlopperEngine.UI.Text.RasterFontWriter">
+            <summary>
+            Converts strings to textures using a raster font image.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.UI.Text.RasterFontWriter.WriteToTexture2D(System.ReadOnlySpan{System.Char},SlopperEngine.UI.Text.RasterFont,System.UInt32)">
+            <summary>
+            Writes a string to a texture. May or may not replace the texture with a new instance, if the size is inadequate.
+            </summary>
+            <param name="text">The text to write.</param>
+            <param name="font">The font to use.</param>
+            <param name="maxWidthPixels">The maximum width of the result texture in pixels. May be slightly exceeded.</param>
+        </member>
+        <member name="T:SlopperEngine.UI.Text.TextBox">
+            <summary>
+            Contains text.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Text.TextBox.Text">
+            <summary>
+            The text to display on this box. May resize the textbox.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Text.TextBox.Font">
+            <summary>
+            The font to use in the box. May resize this textbox.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Text.TextBox.TextColor">
+            <summary>
+            The color of the text.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.UI.Text.TextBox.BackgroundColor">
+            <summary>
+            The color of the background.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Text.TextBox.Scale">
+            <summary>
+            The scale of the text box. 
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Text.TextBox.Horizontal">
+            <summary>
+            How to horizontally align the box. Max (rightward) on default.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.UI.Text.TextBox.Vertical">
+            <summary>
+            How to vertically align the box. Min (downward) on default.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Windowing.MainContext">
+            <summary>
+            Handles the main events loop of SlopperEngine.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Windowing.MainContext.ThrowIfSevereGLError">
+            <summary>
+            If GL throws an error, the MainContext will shut down. This can make it significantly easier to track down GL errors, but does crash the engine.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Windowing.MainContext.MultithreadedFrameUpdate">
+            <summary>
+            Whether or not the FrameUpdate should be multithreaded. Should be deprecated when this is known not to produce errors.
+            </summary>
+        </member>
+        <member name="F:SlopperEngine.Windowing.MainContext.Instance">
+            <summary>
+            The central MainContext instance.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Windowing.MainContext.Main">
+            <summary>
+            Starts SlopperEngine.
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Windowing.TextInputEvent">
+            <summary>
+            A text input event, used when text is entered normally.
+            </summary>
+            <param name="Origin">The window that raised the event. </param>
+            <param name="CharacterAsUnicode">The character that was entered as a UTF-32 code point. Valid when ctrl is not held.</param>
+            <param name="CharacterAsKey">The character that was entered as a GLFW key. Valid when ctrl is held.</param>
+            <param name="LeftControlHeld">Whether the left control key was held.</param>
+            <param name="LeftShiftHeld">Whether the left shift key was held.</param>
+            <param name="LeftAltHeld">Whether the left alt key was held.</param>
+            <param name="RightControlHeld">Whether the right control key was held.</param>
+            <param name="RightShiftHeld">Whether the right shift key was held.</param>
+            <param name="RightAltHeld">Whether the right alt key was held.</param>
+            <param name="SuperKeyHeld">Whether the windows/command key was held.</param>
+        </member>
+        <member name="M:SlopperEngine.Windowing.TextInputEvent.#ctor(SlopperEngine.Windowing.Window,System.Int32,OpenTK.Windowing.GraphicsLibraryFramework.Keys,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            A text input event, used when text is entered normally.
+            </summary>
+            <param name="Origin">The window that raised the event. </param>
+            <param name="CharacterAsUnicode">The character that was entered as a UTF-32 code point. Valid when ctrl is not held.</param>
+            <param name="CharacterAsKey">The character that was entered as a GLFW key. Valid when ctrl is held.</param>
+            <param name="LeftControlHeld">Whether the left control key was held.</param>
+            <param name="LeftShiftHeld">Whether the left shift key was held.</param>
+            <param name="LeftAltHeld">Whether the left alt key was held.</param>
+            <param name="RightControlHeld">Whether the right control key was held.</param>
+            <param name="RightShiftHeld">Whether the right shift key was held.</param>
+            <param name="RightAltHeld">Whether the right alt key was held.</param>
+            <param name="SuperKeyHeld">Whether the windows/command key was held.</param>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.Origin">
+            <summary>The window that raised the event. </summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.CharacterAsUnicode">
+            <summary>The character that was entered as a UTF-32 code point. Valid when ctrl is not held.</summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.CharacterAsKey">
+            <summary>The character that was entered as a GLFW key. Valid when ctrl is held.</summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.LeftControlHeld">
+            <summary>Whether the left control key was held.</summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.LeftShiftHeld">
+            <summary>Whether the left shift key was held.</summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.LeftAltHeld">
+            <summary>Whether the left alt key was held.</summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.RightControlHeld">
+            <summary>Whether the right control key was held.</summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.RightShiftHeld">
+            <summary>Whether the right shift key was held.</summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.RightAltHeld">
+            <summary>Whether the right alt key was held.</summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.SuperKeyHeld">
+            <summary>Whether the windows/command key was held.</summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.AnyControlheld">
+            <summary>
+            Whether the left or right control keys are held.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.AnyShiftHeld">
+            <summary>
+            Whether the left or right shift keys are held.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.AnyAltHeld">
+            <summary>
+            Whether the left or right alt keys are held.
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.CharacterIsAsKey">
+            <summary>
+            Whether or not CharacterAsKey contains the value of the event. Generally applies when ctrl or super is held, or if the key is not a unicode character (like arrows or backspace or any modifiers).
+            </summary>
+        </member>
+        <member name="P:SlopperEngine.Windowing.TextInputEvent.CharacterIsAsUnicode">
+            <summary>
+            Whether or not CharacterAsUnicode contains the value of the event. Generally applies when ctrl or super are not held.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Windowing.TextInputEvent.TryGetAsChar(System.Char@)">
+            <summary>
+            Tries to get the input event as a character. May be capitalised, if shift is held.
+            </summary>
+            <param name="character">The character stored in the event.</param>
+            <returns>Whether or not the character is a valid single char.</returns>
+        </member>
+        <member name="M:SlopperEngine.Windowing.TextInputEvent.GetAsString">
+            <summary>
+            Gets the input event as a string, for if the value is comprised of multiple char instances (in case of emojis, for example).
+            </summary>
+        </member>
+        <member name="T:SlopperEngine.Windowing.Window">
+            <summary>
+            Represents a window from the operating system.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Windowing.Window.Render">
+            <summary>
+            Should only be called by MainContext. Updates the window's image.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Windowing.Window.GetTextInputs">
+            <summary>
+            Gets all text input events collected this frame.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Windowing.Window.ClearTextInputs">
+            <summary>
+            Clears all text input events. 
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Windowing.Window.Create">
+            <summary>
+            Creates a new window.
+            </summary>
+        </member>
+        <member name="M:SlopperEngine.Windowing.Window.Create(SlopperEngine.Windowing.WindowSettings)">
+            <summary>
+            Creates a new window of a specific size and settings.
+            </summary>
+        </member>
+    </members>
+</doc>

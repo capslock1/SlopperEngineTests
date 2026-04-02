@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SlopperEngine\SlopperEngine\SlopperEngine.csproj" />
+    </ItemGroup>
+
+    <Target Name="IsolateAssembly" AfterTargets = "Build">
+        <MakeDir Directories = "$(MSBuildProjectDirectory)\LatestOutput"/>
+
+        <Copy
+            SourceFiles = "$(OutputPath)\TestProgram.dll;$(OutputPath)\TestProgram.pdb"
+            DestinationFolder = "$(MSBuildProjectDirectory)\LatestOutput"
+        />
+    </Target>
+
+</Project>
