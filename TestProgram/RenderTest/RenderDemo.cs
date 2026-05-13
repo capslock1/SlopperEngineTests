@@ -72,6 +72,11 @@ public class RenderDemo : SceneObject, IDemo
            Radius = 40,
            Sharpness = 1.5f 
         });
+        scene.Children.Add(new DirectionalLight()
+        {
+           LocalRotation = Quaternion.FromAxisAngle(new(1,0,0), float.Pi*0.5f),
+           Color = new(0.1f, 0.5f, 0.1f), 
+        });
     }
 
     [OnFrameUpdate]

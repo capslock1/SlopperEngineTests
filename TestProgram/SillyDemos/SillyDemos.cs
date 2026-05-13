@@ -137,10 +137,9 @@ public class SillyDemos : UIElement, IDemo
                 var sub = new Subway();
                 sc.Children.Add(sub);
 
-                var light = new PointLight();
-                light.LocalPosition = new(100, 100, 100);
-                light.Color = new(2);
-                light.Radius = 1000;
+                var light = new DirectionalLight();
+                light.LocalRotation = Quaternion.FromAxisAngle(new(1,1,1), float.Pi*.5f);
+                light.Color = new(1.2f);
                 sc.Children.Add(light);
 
                 var plimboModel = new Plimbo();
