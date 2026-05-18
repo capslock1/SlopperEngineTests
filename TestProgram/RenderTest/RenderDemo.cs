@@ -7,7 +7,7 @@ using SlopperEngine.Rendering;
 using SlopperEngine.SceneObjects;
 using SlopperEngine.Windowing;
 
-namespace TestProgram.PerformanceTests;
+namespace TestProgram.RenderTest;
 
 public class RenderDemo : SceneObject, IDemo
 {

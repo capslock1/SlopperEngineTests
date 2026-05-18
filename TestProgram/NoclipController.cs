@@ -3,8 +3,11 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using SlopperEngine.Core;
 using SlopperEngine.SceneObjects;
 
-namespace TestProgram.PerformanceTests;
+namespace TestProgram;
 
+/// <summary>
+/// Controls the parent SceneObject3D with WASD + ctrl + spacebar + mouse + scroll. Clips through objects.
+/// </summary>
 public class NoclipController : SceneObject
 {
     Vector2 _rot;
