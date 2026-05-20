@@ -4,6 +4,7 @@ using SlopperEngine.Core;
 using SlopperEngine.Graphics;
 using SlopperEngine.Graphics.DefaultResources;
 using SlopperEngine.Rendering;
+using SlopperEngine.Rendering.Lighting;
 using SlopperEngine.SceneObjects;
 using SlopperEngine.Windowing;
 
@@ -12,6 +13,8 @@ namespace TestProgram.RenderTest;
 public class RenderDemo : SceneObject, IDemo
 {
     Window _displayWindow;
+    Window _depthWindow;
+    SceneObject3D _randomObjectHolder;
     double _fpscapBeforeDemo;
 
     public static Scene CreateDemoScene()
@@ -23,17 +26,25 @@ public class RenderDemo : SceneObject, IDemo
 
     private RenderDemo(Scene scene)
     {
-        _displayWindow = Window.Create(new((1200,800), Title:"Performance tests"));
+        _displayWindow = Window.Create(new((1200,800), Title:"Render demo"));
         _displayWindow.CenterWindow();
         _displayWindow.Scene = scene;
         _displayWindow.WindowTexture = scene.SceneRenderer?.GetOutputTexture();
         _displayWindow.Closing += a => scene.Destroy();
         scene.SceneRenderer?.Resize((1200,800));
 
+        _depthWindow = Window.Create(new((256,256), Title:"Directional Light Depth Buffer"));
+        _depthWindow.CenterWindow();
+        _depthWindow.WindowTexture = (scene.SceneRenderer as DebugRenderer)?.ShadowBuffer.ColorAttachments[0];
+
         // set fps cap infinite to test it properly
         _fpscapBeforeDemo = MainContext.Instance.UpdateFrequency;
         MainContext.Instance.UpdateFrequency = 0;
-        scene.OnDestroy += () => MainContext.Instance.UpdateFrequency = _fpscapBeforeDemo;
+        scene.OnDestroy += () => 
+        {
+            MainContext.Instance.UpdateFrequency = _fpscapBeforeDemo;
+            _depthWindow.Close();
+        };
 
         Camera cam = new();
         scene.Children.Add(cam);
@@ -42,6 +53,8 @@ public class RenderDemo : SceneObject, IDemo
 
         Random rand = new(6767);
         Material mat = Material.Create(SlopperShader.Create(Asset.GetEngineAsset("shaders/phongShader.sesl")));
+        _randomObjectHolder = new();
+        scene.Children.Add(_randomObjectHolder);
         for(int i = 0; i<100; i++)
         {
             MeshRenderer rend = new()
@@ -56,8 +69,16 @@ public class RenderDemo : SceneObject, IDemo
                 LocalRotation = Quaternion.FromEulerAngles(rand.NextSingle(), rand.NextSingle(), rand.NextSingle()),
                 Material = mat
             };
-            scene.Children.Add(rend);
+            _randomObjectHolder.Children.Add(rend);
         }
+        scene.Children.Add(new MeshRenderer() // floor
+        {
+            LocalPosition = new(0,-15,0),
+            LocalScale = new(15),
+            LocalRotation = Quaternion.FromAxisAngle(new(1,0,0), float.Pi*1.5f),
+            Material = mat,
+            Mesh = DefaultMeshes.Plane,
+        });
         scene.Children.Add(new PointLight()
         {
            LocalPosition = new(12,12,12),
@@ -74,14 +95,17 @@ public class RenderDemo : SceneObject, IDemo
         });
         scene.Children.Add(new DirectionalLight()
         {
-           LocalRotation = Quaternion.FromAxisAngle(new(1,0,0), float.Pi*0.5f),
-           Color = new(0.1f, 0.5f, 0.1f), 
+           LocalRotation = Quaternion.FromAxisAngle(new(1,0,0), float.Pi*1.5f),
+           Color = new(0.1f, 0.5f, 0.1f),
+           CastsShadows = true,
         });
     }
 
     [OnFrameUpdate]
     void FrameUpdate(FrameUpdateArgs args)
     {
+        _randomObjectHolder.LocalRotation *= Quaternion.FromAxisAngle(new(0,1,1), args.DeltaTime * 0.02f);
+
         // record frametime
     }
 

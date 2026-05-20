@@ -3,6 +3,7 @@ using SlopperEngine.Graphics;
 using SlopperEngine.Windowing;
 using SlopperEngine.SceneObjects;
 using SlopperEngine.Rendering;
+using SlopperEngine.Rendering.Lighting;
 using OpenTK.Windowing.Common;
 using SlopperEngine.Core.SceneComponents;
 using StbImageSharp;
@@ -138,7 +139,7 @@ public class SillyDemos : UIElement, IDemo
                 sc.Children.Add(sub);
 
                 var light = new DirectionalLight();
-                light.LocalRotation = Quaternion.FromAxisAngle(new(1,1,1), float.Pi*.5f);
+                light.LocalRotation = Quaternion.FromAxisAngle(new(1,1,1), float.Pi*1.5f);
                 light.Color = new(1.2f);
                 sc.Children.Add(light);
 
