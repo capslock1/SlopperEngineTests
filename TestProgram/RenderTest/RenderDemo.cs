@@ -13,7 +13,6 @@ namespace TestProgram.RenderTest;
 public class RenderDemo : SceneObject, IDemo
 {
     Window _displayWindow;
-    Window _depthWindow;
     SceneObject3D _randomObjectHolder;
     double _fpscapBeforeDemo;
 
@@ -33,17 +32,12 @@ public class RenderDemo : SceneObject, IDemo
         _displayWindow.Closing += a => scene.Destroy();
         scene.SceneRenderer?.Resize((1200,800));
 
-        _depthWindow = Window.Create(new((256,256), Title:"Directional Light Depth Buffer"));
-        _depthWindow.CenterWindow();
-        _depthWindow.WindowTexture = (scene.SceneRenderer as DebugRenderer)?.ShadowBuffer.ColorAttachments[0];
-
         // set fps cap infinite to test it properly
         _fpscapBeforeDemo = MainContext.Instance.UpdateFrequency;
         MainContext.Instance.UpdateFrequency = 0;
         scene.OnDestroy += () => 
         {
             MainContext.Instance.UpdateFrequency = _fpscapBeforeDemo;
-            _depthWindow.Close();
         };
 
         Camera cam = new();
