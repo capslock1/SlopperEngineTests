@@ -12,9 +12,11 @@ namespace TestProgram.RenderTest;
 
 public class RenderDemo : SceneObject, IDemo
 {
+    public readonly DirectionalLight SkyLight;
     Window _displayWindow;
     SceneObject3D _randomObjectHolder;
     double _fpscapBeforeDemo;
+    DemoSettings _settings;
 
     public static Scene CreateDemoScene()
     {
@@ -25,12 +27,14 @@ public class RenderDemo : SceneObject, IDemo
 
     private RenderDemo(Scene scene)
     {
-        _displayWindow = Window.Create(new((1200,800), Title:"Render demo"));
+        var displaySize = new Vector2i(1200, 800);
+
+        _displayWindow = Window.Create(new(displaySize, Title:"Render demo"));
         _displayWindow.CenterWindow();
         _displayWindow.Scene = scene;
         _displayWindow.WindowTexture = scene.SceneRenderer?.GetOutputTexture();
         _displayWindow.Closing += a => scene.Destroy();
-        scene.SceneRenderer?.Resize((1200,800));
+        scene.SceneRenderer?.Resize(2*displaySize);
 
         // set fps cap infinite to test it properly
         _fpscapBeforeDemo = MainContext.Instance.UpdateFrequency;
@@ -38,12 +42,13 @@ public class RenderDemo : SceneObject, IDemo
         scene.OnDestroy += () => 
         {
             MainContext.Instance.UpdateFrequency = _fpscapBeforeDemo;
+            _settings!.Destroy();
         };
 
         Camera cam = new();
         scene.Children.Add(cam);
         cam.Children.Add(new NoclipController());
-        cam.Projection = Matrix4.CreatePerspectiveFieldOfView(1, 1.5f, 0.2f, 200f);
+        cam.Projection = Matrix4.CreatePerspectiveFieldOfView(1, 1.5f, 0.2f, 512f);
 
         Random rand = new(6767);
         Material mat = Material.Create(SlopperShader.Create(Asset.GetEngineAsset("shaders/phongShader.sesl")));
@@ -87,12 +92,14 @@ public class RenderDemo : SceneObject, IDemo
            Radius = 40,
            Sharpness = 1.5f 
         });
-        scene.Children.Add(new DirectionalLight()
+        scene.Children.Add(SkyLight = new DirectionalLight()
         {
            LocalRotation = Quaternion.FromAxisAngle(new(1,0,0), float.Pi*1.5f),
            Color = new(0.1f, 0.5f, 0.1f),
            CastsShadows = true,
         });
+
+        _settings = new(this);
     }
 
     [OnFrameUpdate]
@@ -107,11 +114,10 @@ public class RenderDemo : SceneObject, IDemo
     void InputUpdate(InputUpdateArgs args)
     {
         if(args.KeyboardState.IsKeyPressed(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape))
-        {
-            Scene?.Destroy();
-            _displayWindow.Close();
-        }
+            Kill();
     }
+
+    public void Kill() => _displayWindow.Close();
 
     static string? IDemo.GetDescription() => "Demo for testing new render features for the engine. \nPress 'Esc' to close.";
 }

@@ -141,6 +141,7 @@ public class SillyDemos : UIElement, IDemo
                 var light = new DirectionalLight();
                 light.LocalRotation = Quaternion.FromAxisAngle(new(1,1,1), float.Pi*1.5f);
                 light.Color = new(1.2f);
+                light.CastsShadows = true;
                 sc.Children.Add(light);
 
                 var plimboModel = new Plimbo();

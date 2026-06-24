@@ -1,0 +1,101 @@
+using OpenTK.Mathematics;
+using SlopperEngine.Core;
+using SlopperEngine.Core.SceneComponents;
+using SlopperEngine.Rendering;
+using SlopperEngine.SceneObjects;
+using SlopperEngine.UI.Base;
+using SlopperEngine.UI.Interaction;
+using SlopperEngine.UI.Layout;
+using SlopperEngine.UI.Style;
+using SlopperEngine.UI.Text;
+using SlopperEngine.Windowing;
+
+namespace TestProgram.RenderTest;
+/// <summary>
+/// Settings window for the demo.
+/// </summary>
+public class DemoSettings : SceneObject
+{
+    RenderDemo? _demo;
+    Window _window;
+    TextBox _frametimeDisplay;
+    double _frameTimeAcc;
+    int _framesHad = 1;
+    public DemoSettings(RenderDemo demo)
+    {
+        _demo = demo;
+
+        Scene sc = Scene.CreateEmpty();
+        sc.Components.Add(new UpdateHandler());
+        sc.Renderers.Add(new UIRenderer());
+        sc.CheckCachedComponents();
+        sc.Children.Add(this);
+
+        var windowSize = new Vector2i(300, 200);
+        _window = Window.Create(new(windowSize, Title: "Render demo settings"));
+        _window.CenterWindow();
+        _window.Scene = sc;
+        _window.WindowTexture = sc.SceneRenderer?.GetOutputTexture();
+        _window.Closing += a => _demo?.Kill();
+        sc.SceneRenderer!.Resize(windowSize);
+
+        UIElement root = new();
+        sc.Children.Add(root);
+        root.Layout.Value = new LinearArrangedLayout
+        {
+            IsLayoutHorizontal = false,
+            StartAtMax = true,
+            ChildAlignment = Alignment.Middle
+        };
+        root.UIChildren.Add(_frametimeDisplay = new("FPS: -"){Scale = 1});
+        TextButton dirLightSwitch = new TextButton("Directional light: 3 cascades (default)");
+        root.UIChildren.Add(dirLightSwitch);
+        int dirSwitch = 0;
+        dirLightSwitch.Style = BasicStyle.DefaultStyle;
+        dirLightSwitch.OnButtonReleased += _ =>
+        {
+            dirSwitch++;
+            _framesHad = 1;
+            _frameTimeAcc = 0;
+            switch(dirSwitch)
+            {
+                case 0:
+                dirLightSwitch.Text = "Directional light: 3 cascades (default)";
+                demo.SkyLight.Cascades = null;
+                break;
+
+                case 1:
+                dirLightSwitch.Text = "Directional light: Shadow casting off";
+                demo.SkyLight.CastsShadows = false;
+                break;
+
+                case 2: 
+                (demo.Scene!.SceneRenderer as DebugRenderer)!.UseInfiniteShadowMap = true;
+                dirLightSwitch.Text = "Directional light: infinite map";
+                demo.SkyLight.CastsShadows = true;
+                demo.SkyLight.Cascades = [32f];
+                break;
+
+                case 3:
+                (demo.Scene!.SceneRenderer as DebugRenderer)!.UseInfiniteShadowMap = false;
+                dirLightSwitch.Text = "Directional light: 1 cascade";
+                dirSwitch = -1;
+                break;
+            }
+        };
+    }
+
+    [OnFrameUpdate]
+    void OnUpdate(FrameUpdateArgs args)
+    {
+        _frameTimeAcc += args.DeltaTime;
+        _framesHad++;
+        _frametimeDisplay.Text = $"Average Frametime: {_frameTimeAcc * 1000f / _framesHad:0.000}ms\nafter {_framesHad} frames";
+    }
+
+    protected override void OnDestroyed()
+    {
+        _demo = null;
+        _window.Close();
+    }
+}
