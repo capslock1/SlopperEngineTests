@@ -1,0 +1,56 @@
+vertOut vec4 position;
+
+vertToPix vec4 worldPosition;
+vertToPix vec2 uvCoords;
+vertToPix vec4 normal;
+
+vertIn vec4 position;
+vertIn vec2 UVCoordinates;
+vertIn vec3 normal;
+vertIn int instanceID;
+
+uint pcg_hash(uint valIn)
+{
+    //where would we be without https://www.reedbeta.com/blog/hash-functions-for-gpu-rendering/
+    uint state = valIn * 747796405u + 2891336453u;
+    uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+    return (word >> 22u) ^ word;
+}
+
+float uintToFloatRange01(uint rand)
+{
+    rand >>= 9;
+    rand |= 0x3F800000;
+    return uintBitsToFloat(rand)-1.0;
+}
+float randomFloat01(inout uint seed)
+{
+    seed = pcg_hash(seed);
+    return uintToFloatRange01(seed);
+}
+
+void vertex()
+{
+    uint seed = vertIn.instanceID;
+    vertToPix.worldPosition = vertIn.position * Globals.model;
+    vertToPix.worldPosition += vec4(randomFloat01(seed),randomFloat01(seed),randomFloat01(seed),0) * 200; // Hard coded range because mystery error
+    
+    vertOut.position = vertToPix.worldPosition * Globals.view * Globals.projection;
+    vertToPix.normal = vec4(vertIn.normal, 0.0)*Globals.model;
+    vertToPix.uvCoords = vertIn.UVCoordinates;
+}
+
+pixOut vec3 Albedo;
+pixOut vec3 Normal;
+pixOut vec3 Position;
+pixOut float Specular;
+
+void pixel()
+{
+    //phong shading
+    vec3 norm = normalize(vertToPix.normal.xyz);
+    pixOut.Normal = norm;
+    pixOut.Position = vertToPix.worldPosition.xyz;
+    pixOut.Specular = 20.;
+    pixOut.Albedo = vec3(.8);
+}

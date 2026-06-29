@@ -1,6 +1,9 @@
+using System;
 using OpenTK.Mathematics;
 using SlopperEngine.Core;
 using SlopperEngine.Core.SceneComponents;
+using SlopperEngine.Graphics;
+using SlopperEngine.Graphics.DefaultResources;
 using SlopperEngine.Rendering;
 using SlopperEngine.SceneObjects;
 using SlopperEngine.UI.Base;
@@ -81,6 +84,31 @@ public class DemoSettings : SceneObject
                 dirLightSwitch.Text = "Directional light: 1 cascade";
                 dirSwitch = -1;
                 break;
+            }
+        };
+        Material mat = Material.Create(SlopperShader.Create(Asset.GetFile("shaders/InstancedPhong.sesl")));
+        // mat.Uniforms[mat.GetUniformIndexFromName("randomRange")].Value = 100f;
+        MeshRenderer spheres = new MeshRenderer
+        {
+            Material = mat,
+            Mesh = DefaultMeshes.Sphere,
+            InstanceCount = 30000,
+            LocalPosition = new Vector3(20,0,-50)
+        };
+        TextButton megaInstanceSwitch = new TextButton("Sphere spam: off");
+        root.UIChildren.Add(megaInstanceSwitch);
+        megaInstanceSwitch.Style = BasicStyle.DefaultStyle;
+        megaInstanceSwitch.OnButtonReleased += _ =>
+        {
+            if (spheres.InScene)
+            {
+                spheres.Remove();
+                megaInstanceSwitch.Text = "Sphere spam: off";
+            }
+            else
+            {
+                demo.Children.Add(spheres);
+                megaInstanceSwitch.Text = "Sphere spam: on";
             }
         };
     }

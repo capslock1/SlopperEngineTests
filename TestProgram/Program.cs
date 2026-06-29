@@ -29,6 +29,7 @@ public class Program : SlopperEngine.Core.Mods.ISlopModEvents
             // went on a wild goose chase trying to fix the issues this was causing earlier. 
             // multithreading should reaaaallly be fixed, but im not sure what even is the issue...
             MainContext.MultithreadedFrameUpdate = false;
+            MainContext.ThrowIfSevereGLError = true;
 
             Scene mainScene = Scene.CreateEmpty();
             UIRenderer rend = new();
