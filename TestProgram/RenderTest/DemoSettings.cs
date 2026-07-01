@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using OpenTK.Mathematics;
 using SlopperEngine.Core;
 using SlopperEngine.Core.SceneComponents;
@@ -14,6 +16,7 @@ using SlopperEngine.UI.Text;
 using SlopperEngine.Windowing;
 
 namespace TestProgram.RenderTest;
+
 /// <summary>
 /// Settings window for the demo.
 /// </summary>
@@ -24,6 +27,7 @@ public class DemoSettings : SceneObject
     TextBox _frametimeDisplay;
     double _frameTimeAcc;
     int _framesHad = 1;
+    List<Keyframe>? _recordedKeyframes;
     public DemoSettings(RenderDemo demo)
     {
         _demo = demo;
@@ -93,7 +97,7 @@ public class DemoSettings : SceneObject
             Material = mat,
             Mesh = DefaultMeshes.Sphere,
             InstanceCount = 30000,
-            LocalPosition = new Vector3(20,0,-50)
+            LocalPosition = new Vector3(20,0,-100)
         };
         TextButton megaInstanceSwitch = new TextButton("Sphere spam: off");
         root.UIChildren.Add(megaInstanceSwitch);
@@ -109,6 +113,54 @@ public class DemoSettings : SceneObject
             {
                 demo.Children.Add(spheres);
                 megaInstanceSwitch.Text = "Sphere spam: on";
+            }
+        };
+        TextButton Record = new TextButton("Record camera flythrough");
+        Record.Style = BasicStyle.DefaultStyle;
+        root.UIChildren.Add(Record);
+        Record.OnButtonReleased += _ =>
+        {
+            if (demo.Scene?.GetDataContainerEnumerable<Camera>().EnumerateReadonly().FirstOrDefault() is not Camera camera) return;
+            if (camera.Children.FirstOfType<FlyThroughRecorder>() is FlyThroughRecorder RealRecorder)
+            {
+                RealRecorder.StopRecording();
+                _recordedKeyframes = RealRecorder.Keyframes;
+                RealRecorder.Destroy();
+                Record.Text = "Record camera flythrough";
+            }
+            else
+            {
+                RealRecorder = new FlyThroughRecorder();
+                RealRecorder.StartRecording();
+                Record.Text = "Stop recording flythrough";
+                camera.Children.Add(RealRecorder);
+            }
+        };
+        TextButton Play = new TextButton("Play camera flythrough");
+        Play.Style = BasicStyle.DefaultStyle;
+        root.UIChildren.Add(Play);
+        Play.OnButtonReleased += _ =>
+        {
+            if (demo.Scene?.GetDataContainerEnumerable<Camera>().EnumerateReadonly().FirstOrDefault() is not Camera camera) return;
+            if (camera.Children.FirstOfType<FlyThroughPlayer>() is FlyThroughPlayer RealPlayer)
+            {
+                RealPlayer.Destroy();
+                Play.Text = "Play camera flythrough";
+                camera.Children.Add(new NoclipController());
+            }
+            else
+            {
+                if (_recordedKeyframes is null)
+                {
+                    Console.WriteLine("Haven't recorded anything to play back yet");
+                    return;
+                }
+                RealPlayer = new FlyThroughPlayer();
+                RealPlayer.Keyframes = _recordedKeyframes;
+                RealPlayer.Playing = true;
+                Play.Text = "Stop playback";
+                camera.Children.Add(RealPlayer);
+                camera.Children.FirstOfType<NoclipController>()?.Destroy();
             }
         };
     }
