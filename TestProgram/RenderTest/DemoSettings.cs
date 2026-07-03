@@ -115,37 +115,17 @@ public class DemoSettings : SceneObject
                 megaInstanceSwitch.Text = "Sphere spam: on";
             }
         };
-        TextButton Record = new TextButton("Record camera flythrough");
-        Record.Style = BasicStyle.DefaultStyle;
-        root.UIChildren.Add(Record);
-        Record.OnButtonReleased += _ =>
+        TextButton playFlyThroughButton = new TextButton("Play camera flythrough");
+        playFlyThroughButton.Style = BasicStyle.DefaultStyle;
+        playFlyThroughButton.Enabled = _recordedKeyframes is not null;
+        root.UIChildren.Add(playFlyThroughButton);
+        playFlyThroughButton.OnButtonReleased += _ =>
         {
             if (demo.Scene?.GetDataContainerEnumerable<Camera>().EnumerateReadonly().FirstOrDefault() is not Camera camera) return;
-            if (camera.Children.FirstOfType<FlyThroughRecorder>() is FlyThroughRecorder RealRecorder)
+            if (camera.Children.FirstOfType<FlyThroughPlayer>() is FlyThroughPlayer realPlayer)
             {
-                RealRecorder.StopRecording();
-                _recordedKeyframes = RealRecorder.Keyframes;
-                RealRecorder.Destroy();
-                Record.Text = "Record camera flythrough";
-            }
-            else
-            {
-                RealRecorder = new FlyThroughRecorder();
-                RealRecorder.StartRecording();
-                Record.Text = "Stop recording flythrough";
-                camera.Children.Add(RealRecorder);
-            }
-        };
-        TextButton Play = new TextButton("Play camera flythrough");
-        Play.Style = BasicStyle.DefaultStyle;
-        root.UIChildren.Add(Play);
-        Play.OnButtonReleased += _ =>
-        {
-            if (demo.Scene?.GetDataContainerEnumerable<Camera>().EnumerateReadonly().FirstOrDefault() is not Camera camera) return;
-            if (camera.Children.FirstOfType<FlyThroughPlayer>() is FlyThroughPlayer RealPlayer)
-            {
-                RealPlayer.Destroy();
-                Play.Text = "Play camera flythrough";
+                realPlayer.Destroy();
+                playFlyThroughButton.Text = "Play camera flythrough";
                 camera.Children.Add(new NoclipController());
             }
             else
@@ -155,12 +135,34 @@ public class DemoSettings : SceneObject
                     Console.WriteLine("Haven't recorded anything to play back yet");
                     return;
                 }
-                RealPlayer = new FlyThroughPlayer();
-                RealPlayer.Keyframes = _recordedKeyframes;
-                RealPlayer.Playing = true;
-                Play.Text = "Stop playback";
-                camera.Children.Add(RealPlayer);
+                realPlayer = new FlyThroughPlayer();
+                realPlayer.Keyframes = _recordedKeyframes;
+                realPlayer.Playing = true;
+                playFlyThroughButton.Text = "Stop playing flythrough";
+                camera.Children.Add(realPlayer);
                 camera.Children.FirstOfType<NoclipController>()?.Destroy();
+            }
+        };
+        TextButton recordFlyThroughButton = new TextButton("Record camera flythrough");
+        recordFlyThroughButton.Style = BasicStyle.DefaultStyle;
+        root.UIChildren.Add(recordFlyThroughButton);
+        recordFlyThroughButton.OnButtonReleased += _ =>
+        {
+            if (demo.Scene?.GetDataContainerEnumerable<Camera>().EnumerateReadonly().FirstOrDefault() is not Camera camera) return;
+            if (camera.Children.FirstOfType<FlyThroughRecorder>() is FlyThroughRecorder realRecorder)
+            {
+                realRecorder.StopRecording();
+                _recordedKeyframes = realRecorder.Keyframes;
+                playFlyThroughButton.Enabled = true;
+                realRecorder.Destroy();
+                recordFlyThroughButton.Text = "Record camera flythrough";
+            }
+            else
+            {
+                realRecorder = new FlyThroughRecorder();
+                realRecorder.StartRecording();
+                recordFlyThroughButton.Text = "Stop recording flythrough";
+                camera.Children.Add(realRecorder);
             }
         };
     }
