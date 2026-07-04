@@ -73,7 +73,7 @@ public class RenderDemo : SceneObject, IDemo
         scene.Children.Add(new MeshRenderer() // floor
         {
             LocalPosition = new(0,-15,0),
-            LocalScale = new(15),
+            LocalScale = new(150),
             LocalRotation = Quaternion.FromAxisAngle(new(1,0,0), float.Pi*1.5f),
             Material = mat,
             Mesh = DefaultMeshes.Plane,
@@ -99,7 +99,7 @@ public class RenderDemo : SceneObject, IDemo
            CastsShadows = true,
         });
 
-        _settings = new(this);
+        _settings = new(this, displaySize);
     }
 
     [OnFrameUpdate]

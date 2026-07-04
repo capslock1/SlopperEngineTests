@@ -28,7 +28,8 @@ public class DemoSettings : SceneObject
     double _frameTimeAcc;
     int _framesHad = 1;
     List<Keyframe>? _recordedKeyframes;
-    public DemoSettings(RenderDemo demo)
+
+    public DemoSettings(RenderDemo demo, Vector2i mainWindowSize)
     {
         _demo = demo;
 
@@ -39,8 +40,9 @@ public class DemoSettings : SceneObject
         sc.Children.Add(this);
 
         var windowSize = new Vector2i(300, 200);
-        _window = Window.Create(new(windowSize, Title: "Render demo settings"));
+        _window = Window.Create(new(windowSize, Title: "Render demo settings", Border: OpenTK.Windowing.Common.WindowBorder.Fixed));
         _window.CenterWindow();
+        _window.ClientLocation = new Vector2i(_window.ClientLocation.X + mainWindowSize.X/2 + windowSize.X/2 + 30, _window.ClientLocation.Y);
         _window.Scene = sc;
         _window.WindowTexture = sc.SceneRenderer?.GetOutputTexture();
         _window.Closing += a => _demo?.Kill();
@@ -64,28 +66,38 @@ public class DemoSettings : SceneObject
             dirSwitch++;
             _framesHad = 1;
             _frameTimeAcc = 0;
+            var debugRenderer = (DebugRenderer)demo.Scene!.SceneRenderer!;
             switch(dirSwitch)
             {
                 case 0:
                 dirLightSwitch.Text = "Directional light: 3 cascades (default)";
+                debugRenderer.UseInfiniteShadowMap = false;
                 demo.SkyLight.Cascades = null;
                 break;
 
-                case 1:
+                case 1: 
+                dirLightSwitch.Text = "Directional light: map+ 3 cascades";
+                debugRenderer.UseInfiniteShadowMap = true;
+                demo.SkyLight.Cascades = null;
+                break;
+
+                case 2:
                 dirLightSwitch.Text = "Directional light: Shadow casting off";
                 demo.SkyLight.CastsShadows = false;
                 break;
 
-                case 2: 
-                (demo.Scene!.SceneRenderer as DebugRenderer)!.UseInfiniteShadowMap = true;
-                dirLightSwitch.Text = "Directional light: infinite map";
+                case 3:
+                dirLightSwitch.Text = "Directional light: 1 cascade";
+                debugRenderer.UseInfiniteShadowMap = false;
                 demo.SkyLight.CastsShadows = true;
                 demo.SkyLight.Cascades = [32f];
                 break;
 
-                case 3:
-                (demo.Scene!.SceneRenderer as DebugRenderer)!.UseInfiniteShadowMap = false;
-                dirLightSwitch.Text = "Directional light: 1 cascade";
+                case 4: 
+                dirLightSwitch.Text = "Directional light: map+ 1 cascade";
+                debugRenderer.UseInfiniteShadowMap = true;
+                demo.SkyLight.CastsShadows = true;
+                demo.SkyLight.Cascades = [32f];
                 dirSwitch = -1;
                 break;
             }
@@ -99,7 +111,7 @@ public class DemoSettings : SceneObject
             InstanceCount = 30000,
             LocalPosition = new Vector3(20,0,-100)
         };
-        TextButton megaInstanceSwitch = new TextButton("Sphere spam: off");
+        TextButton megaInstanceSwitch = new TextButton("Many triangles: off");
         root.UIChildren.Add(megaInstanceSwitch);
         megaInstanceSwitch.Style = BasicStyle.DefaultStyle;
         megaInstanceSwitch.OnButtonReleased += _ =>
@@ -107,12 +119,51 @@ public class DemoSettings : SceneObject
             if (spheres.InScene)
             {
                 spheres.Remove();
-                megaInstanceSwitch.Text = "Sphere spam: off";
+                megaInstanceSwitch.Text = "Many triangles: off";
             }
             else
             {
                 demo.Children.Add(spheres);
-                megaInstanceSwitch.Text = "Sphere spam: on";
+                megaInstanceSwitch.Text = "Many triangles: on";
+            }
+        };
+        SceneObject? manyCubes = null;
+        TextButton cubeSwitch = new TextButton("Many draw calls: off");
+        root.UIChildren.Add(cubeSwitch);
+        cubeSwitch.Style = BasicStyle.DefaultStyle;
+        cubeSwitch.OnButtonReleased += _ =>
+        {
+            if (manyCubes == null)
+            {
+                manyCubes = new ();
+                Random rand = new(3621);
+                Material cube = Material.Create(SlopperShader.Create(Asset.GetEngineAsset("shaders/phongShader.sesl")));
+                for (int i = 0; i < 10000; i++)
+                {
+                    float t = i/100f;
+                    float x = float.Cos(t);
+                    float y = float.Sin(t);
+                    x = -float.Abs(x);
+                    float d = i/20f + 30;
+                    manyCubes.Children.Add(new MeshRenderer
+                    {
+                        Material = cube,
+                        Mesh = DefaultMeshes.Cube,
+                        LocalPosition = new Vector3(x,0.5f,y) * d,
+                        LocalRotation = Quaternion.FromEulerAngles(rand.NextSingle(), rand.NextSingle(), rand.NextSingle()),
+                        LocalScale = new Vector3(d/30)
+                    });
+                }
+            }
+            if (manyCubes.InScene)
+            {
+                manyCubes.Remove();
+                cubeSwitch.Text = "Many draw calls: off";
+            }
+            else
+            {
+                demo.Children.Add(manyCubes);
+                cubeSwitch.Text = "Many draw calls: on";
             }
         };
 
