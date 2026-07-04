@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using OpenTK.Mathematics;
@@ -48,6 +49,7 @@ public record struct Keyframe(float Time, Vector3 Position, Quaternion Rotation)
     {
         if (!csvFile.CanRead) throw new System.Exception("Haha, I can't read!");
         List<Keyframe> res = [];
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
         foreach (var line in csvFile.ReadAllLines())
         {
@@ -79,6 +81,7 @@ public record struct Keyframe(float Time, Vector3 Position, Quaternion Rotation)
     public static void SaveToCsv(Asset csvFile, List<Keyframe> keyframes)
     {
         if (!csvFile.CanWrite) throw new System.Exception("File cannot write!");
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
         
         using var stream = csvFile.GetStream();
         using var textStream = new StreamWriter(stream, Encoding.UTF8);

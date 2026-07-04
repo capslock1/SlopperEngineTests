@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -332,6 +333,7 @@ public class DemoSettings : SceneObject
         public void SaveFrametimes(Asset csvFile)
         {
             if (!csvFile.CanWrite) throw new System.Exception("File cannot write!");
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             
             using var stream = csvFile.GetStream();
             using var textStream = new StreamWriter(stream, Encoding.UTF8);
