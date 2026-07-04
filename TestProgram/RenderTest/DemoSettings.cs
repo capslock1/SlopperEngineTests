@@ -115,6 +115,10 @@ public class DemoSettings : SceneObject
                 megaInstanceSwitch.Text = "Sphere spam: on";
             }
         };
+
+        if (Asset.TryGetFile("RenderDemo/Flythrough.csv", out var asset))
+            _recordedKeyframes = Keyframe.LoadFromCsv(asset.Value);
+
         TextButton playFlyThroughButton = new TextButton("Play camera flythrough");
         playFlyThroughButton.Style = BasicStyle.DefaultStyle;
         playFlyThroughButton.Enabled = _recordedKeyframes is not null;
@@ -143,6 +147,7 @@ public class DemoSettings : SceneObject
                 camera.Children.FirstOfType<NoclipController>()?.Destroy();
             }
         };
+        TextButton saveFlythrough = new TextButton("Save flythrough");
         TextButton recordFlyThroughButton = new TextButton("Record camera flythrough");
         recordFlyThroughButton.Style = BasicStyle.DefaultStyle;
         root.UIChildren.Add(recordFlyThroughButton);
@@ -154,6 +159,7 @@ public class DemoSettings : SceneObject
                 realRecorder.StopRecording();
                 _recordedKeyframes = realRecorder.Keyframes;
                 playFlyThroughButton.Enabled = true;
+                saveFlythrough.Enabled = true;
                 realRecorder.Destroy();
                 recordFlyThroughButton.Text = "Record camera flythrough";
             }
@@ -164,6 +170,23 @@ public class DemoSettings : SceneObject
                 recordFlyThroughButton.Text = "Stop recording flythrough";
                 camera.Children.Add(realRecorder);
             }
+        };
+
+        saveFlythrough.Style = BasicStyle.DefaultStyle;
+        saveFlythrough.Enabled = _recordedKeyframes is not null;
+        root.UIChildren.Add(saveFlythrough);
+        saveFlythrough.OnButtonReleased += _ =>
+        {
+            if (_recordedKeyframes == null)
+            {
+                Console.WriteLine("Recorded keyframes were null!");
+                return;
+            }
+            
+            if (Asset.TryGetFile("RenderDemo/Flythrough.csv", out var file, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.Write))
+                Keyframe.SaveToCsv(file.Value, _recordedKeyframes);
+            else
+                Console.WriteLine("No permissions to save flythrough :{"); 
         };
     }
 

@@ -1,4 +1,8 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using OpenTK.Mathematics;
+using SlopperEngine.Core;
 
 namespace TestProgram.RenderTest;
 
@@ -31,7 +35,73 @@ public record struct Keyframe(float Time, Vector3 Position, Quaternion Rotation)
         var linear1 = Lerp(quad1, quad2, currentToNext);
         var linear2 = Lerp(quad2, quad3, currentToNext);
 
-        return Lerp(linear1, linear2, currentToNext);
+        var res = Lerp(linear1, linear2, currentToNext);
+        // System.Console.WriteLine(Matrix3.CreateFromQuaternion(res.Rotation).Row2);
+        // System.Console.WriteLine(Matrix4.LookAt(default, Matrix3.CreateFromQuaternion(res.Rotation).Row2, Vector3.UnitY));
+        // res.Rotation = Matrix4.LookAt(default, -Matrix3.CreateFromQuaternion(res.Rotation).Column2, Vector3.UnitY).ExtractRotation();
+        // System.Console.WriteLine(res.Rotation);
+
+        return res;
+    }
+
+    public static List<Keyframe> LoadFromCsv(Asset csvFile)
+    {
+        if (!csvFile.CanRead) throw new System.Exception("Haha, I can't read!");
+        List<Keyframe> res = [];
+
+        foreach (var line in csvFile.ReadAllLines())
+        {
+            var values = line.Split(',');
+
+            Keyframe k = default;
+
+            k.Time = float.Parse(values[0]);
+            k.Position = new Vector3
+            (
+                float.Parse(values[1]),
+                float.Parse(values[2]),
+                float.Parse(values[3])
+            );
+            k.Rotation = new Quaternion
+            (
+                float.Parse(values[4]),
+                float.Parse(values[5]),
+                float.Parse(values[6]),
+                float.Parse(values[7])
+            );
+
+            res.Add(k);
+        }
+        
+        return res;
+    }
+    
+    public static void SaveToCsv(Asset csvFile, List<Keyframe> keyframes)
+    {
+        if (!csvFile.CanWrite) throw new System.Exception("File cannot write!");
+        
+        using var stream = csvFile.GetStream();
+        using var textStream = new StreamWriter(stream, Encoding.UTF8);
+        
+        foreach (var keyframe in keyframes)
+        {
+            textStream.Write(keyframe.Time.ToString("0.000"));
+            textStream.Write(',');
+            textStream.Write(keyframe.Position.X.ToString("0.000"));
+            textStream.Write(',');
+            textStream.Write(keyframe.Position.Y.ToString("0.000"));
+            textStream.Write(',');
+            textStream.Write(keyframe.Position.Z.ToString("0.000"));
+            textStream.Write(',');
+            textStream.Write(keyframe.Rotation.X.ToString("0.000"));
+            textStream.Write(',');
+            textStream.Write(keyframe.Rotation.Y.ToString("0.000"));
+            textStream.Write(',');
+            textStream.Write(keyframe.Rotation.Z.ToString("0.000"));
+            textStream.Write(',');
+            textStream.Write(keyframe.Rotation.W.ToString("0.000"));
+            textStream.WriteLine();
+        }
     }
 }
 
