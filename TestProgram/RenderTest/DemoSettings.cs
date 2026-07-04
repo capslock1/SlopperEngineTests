@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using OpenTK.Mathematics;
 using SlopperEngine.Core;
 using SlopperEngine.Core.SceneComponents;
@@ -199,6 +201,7 @@ public class DemoSettings : SceneObject
             }
         };
         TextButton saveFlythrough = new TextButton("Save flythrough");
+        TextButton recordPerformance = new TextButton("Record and save performance");
         TextButton recordFlyThroughButton = new TextButton("Record camera flythrough");
         recordFlyThroughButton.Style = BasicStyle.DefaultStyle;
         root.UIChildren.Add(recordFlyThroughButton);
@@ -211,6 +214,7 @@ public class DemoSettings : SceneObject
                 _recordedKeyframes = realRecorder.Keyframes;
                 playFlyThroughButton.Enabled = true;
                 saveFlythrough.Enabled = true;
+                recordPerformance.Enabled = true;
                 realRecorder.Destroy();
                 recordFlyThroughButton.Text = "Record camera flythrough";
             }
@@ -222,7 +226,7 @@ public class DemoSettings : SceneObject
                 camera.Children.Add(realRecorder);
             }
         };
-
+        
         saveFlythrough.Style = BasicStyle.DefaultStyle;
         saveFlythrough.Enabled = _recordedKeyframes is not null;
         root.UIChildren.Add(saveFlythrough);
@@ -239,6 +243,59 @@ public class DemoSettings : SceneObject
             else
                 Console.WriteLine("No permissions to save flythrough :{"); 
         };
+
+        recordPerformance.Style = BasicStyle.DefaultStyle;
+        recordPerformance.Enabled = _recordedKeyframes is not null;
+        root.UIChildren.Add(recordPerformance);
+        recordPerformance.OnButtonReleased += _ =>
+        {
+            if (_recordedKeyframes == null)
+            {
+                Console.WriteLine("Recorded keyframes were null!");
+                return;
+            }
+
+            if (demo.Scene?.GetDataContainerEnumerable<Camera>().EnumerateReadonly().FirstOrDefault() is not Camera camera) return;
+            if (camera.Children.FirstOfType<FlyThroughPlayer>() is FlyThroughPlayer realPlayer)
+                realPlayer.Destroy();
+
+            const int frequency = 60;
+            
+            realPlayer = new FlyThroughPlayer();
+            FrametimeRecorder timeRecorder = new FrametimeRecorder((int)(_recordedKeyframes[_recordedKeyframes.Count-1].Time * frequency));
+            realPlayer.Children.Add(timeRecorder);
+            realPlayer.Keyframes = _recordedKeyframes;
+            realPlayer.Playing = true;
+            realPlayer.OverrideAnimationFrequency = frequency;
+            camera.Children.Add(realPlayer);
+            camera.Children.FirstOfType<NoclipController>()?.Destroy();
+            recordPerformance.Enabled = false;
+            saveFlythrough.Enabled = false;
+            recordFlyThroughButton.Enabled = false;
+            cubeSwitch.Enabled = false;
+            playFlyThroughButton.Enabled = false;
+            megaInstanceSwitch.Enabled = false;
+            realPlayer.OnAnimationFinish += () =>
+            {
+                realPlayer.Destroy();
+                camera.Children.Add(new NoclipController());
+
+                recordPerformance.Enabled = true;
+                saveFlythrough.Enabled = true;
+                recordFlyThroughButton.Enabled = true;
+                cubeSwitch.Enabled = true;
+                playFlyThroughButton.Enabled = true;
+                megaInstanceSwitch.Enabled = true;
+
+                if (Asset.TryGetFile("RenderDemo/Frametimes.csv", out var file, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.Write))
+                {
+                    timeRecorder.SaveFrametimes(file.Value);
+                    System.Console.WriteLine("Saved delta times to 'TestProgram/AssetsRenderDemo/Frametimes.csv'");                    
+                }
+                else
+                    Console.WriteLine("No permissions to save frame times :{"); 
+            };
+        };
     }
 
     [OnFrameUpdate]
@@ -253,5 +310,34 @@ public class DemoSettings : SceneObject
     {
         _demo = null;
         _window.Close();
+    }
+
+    private class FrametimeRecorder : SceneObject
+    {
+        float[] _deltaTimes;
+        int _current;
+        public FrametimeRecorder(int capacity)
+        {
+            _deltaTimes = new float[capacity];
+        }
+        [OnFrameUpdate]
+        void OnUpdate(FrameUpdateArgs args)
+        {
+            if (_current < _deltaTimes.Length)
+            _deltaTimes[_current] = args.DeltaTime;
+            _current++;
+        }
+
+        public void SaveFrametimes(Asset csvFile)
+        {
+            if (!csvFile.CanWrite) throw new System.Exception("File cannot write!");
+            
+            using var stream = csvFile.GetStream();
+            using var textStream = new StreamWriter(stream, Encoding.UTF8);
+            
+            textStream.WriteLine("delta time (ms)");
+            foreach (var time in _deltaTimes)
+                textStream.WriteLine((time*1000).ToString("0.00"));
+        }
     }
 }

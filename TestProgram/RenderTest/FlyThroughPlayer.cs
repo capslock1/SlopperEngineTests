@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using SlopperEngine.Core;
 using SlopperEngine.SceneObjects;
@@ -21,6 +22,15 @@ public class FlyThroughPlayer : SceneObject
     /// The animation to use.
     /// </summary>
     public List<Keyframe> Keyframes = [];
+    /// <summary>
+    /// Overrides the frequency at which keyframes of the animation are evaluated.
+    /// if 0 or less, animation will be played at real time instead.
+    /// </summary>
+    public float OverrideAnimationFrequency = -1;
+    /// <summary>
+    /// Gets called when the animation is finished.
+    /// </summary>
+    public event Action? OnAnimationFinish = null;
 
     [OnFrameUpdate]
     void Update(FrameUpdateArgs args)
@@ -52,7 +62,14 @@ public class FlyThroughPlayer : SceneObject
             Parent3D.LocalRotation = result.Rotation;
         }
 
-        AnimationProgress += args.DeltaTime;
+        if(index >= Keyframes.Count)
+        {
+            Playing = false;
+            AnimationProgress = 0;
+            OnAnimationFinish?.Invoke();
+        }
+
+        AnimationProgress += OverrideAnimationFrequency <= 0 ? args.DeltaTime : 1/OverrideAnimationFrequency;
     }
 
     int ClampIndex(int i)
