@@ -269,6 +269,7 @@ public class DemoSettings : SceneObject
             realPlayer.OverrideAnimationFrequency = frequency;
             camera.Children.Add(realPlayer);
             camera.Children.FirstOfType<NoclipController>()?.Destroy();
+
             recordPerformance.Enabled = false;
             saveFlythrough.Enabled = false;
             recordFlyThroughButton.Enabled = false;

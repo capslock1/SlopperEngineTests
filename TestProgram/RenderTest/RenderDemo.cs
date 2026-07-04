@@ -102,13 +102,12 @@ public class RenderDemo : SceneObject, IDemo
         _settings = new(this, displaySize);
     }
 
-    [OnFrameUpdate]
-    void FrameUpdate(FrameUpdateArgs args)
-    {
-        _randomObjectHolder.LocalRotation *= Quaternion.FromAxisAngle(new(0,1,1), args.DeltaTime * 0.02f);
-
-        // record frametime
-    }
+    // Can't do this right now because resetting the rotation doesn't seem to work, and having it rotate anyway messes up the performance recording
+    // [OnFrameUpdate]
+    // void FrameUpdate(FrameUpdateArgs args)
+    // {
+    //     _randomObjectHolder.LocalRotation *= Quaternion.FromAxisAngle(new(0,1,1), args.DeltaTime * 0.02f);
+    // }
 
     [OnInputUpdate]
     void InputUpdate(InputUpdateArgs args)
